@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Lavanderia Santo Antônio | Lavanderia</title>
+    <meta
+      name="description"
+      content="Lavanderia Santo Antônio: lavagem de roupas. Confira a tabela de preços, simule seu pedido e finalize pelo WhatsApp."
+    />
+    <meta name="theme-color" content="#0B3A7E" />
+    <meta name="author" content="Lavanderia Santo Antônio" />
+    <link rel="canonical" href="./index.html" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Lavanderia Santo Antônio" />
+    <meta property="og:title" content="Lavanderia Santo Antônio" />
+    <!-- O title e a description abaixo são preenchidos pelo js/app.js
+         a partir de CONFIG.nome e CONFIG.descricaoSite. -->
+    <meta
+      property="og:description"
+      content="Lavanderia Santo Antônio: lavagem de roupas. Confira a tabela de preços, simule seu pedido e finalize pelo WhatsApp."
+    />
+    <meta property="og:image" content="assets/logo-otimizada.png" />
+    <meta property="og:image:alt" content="Logomarca Lavanderia Santo Antônio" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link rel="apple-touch-icon" href="assets/favicon.png" />
+
+    <!-- Fonte (carregamento com fallback caso o navegador esteja offline) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <a class="pular-para-conteudo" href="#conteudo">Pular para o conteúdo</a>
+
+    <!-- Ícones SVG reutilizáveis (WhatsApp, Instagram e as decorações) -->
+    <svg
+      class="decoracoes"
+      aria-hidden="true"
+      focusable="false"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <symbol id="ico-whatsapp" viewBox="0 0 24 24">
+          <path
+            fill="currentColor"
+            d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.48 1.34 5L2 22l5.17-1.35a9.9 9.9 0 0 0 4.87 1.24h.01c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04A9.9 9.9 0 0 0 12.04 2zm0 1.82c2.16 0 4.2.85 5.73 2.38a8.04 8.04 0 0 1 2.37 5.76c0 4.47-3.63 8.1-8.1 8.1a8.1 8.1 0 0 1-4.13-1.13l-.3-.18-3.07.8.82-3-.19-.31a8.06 8.06 0 0 1-1.24-4.29c0-4.46 3.63-8.09 8.1-8.09zm-2.6 4.1c-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.02 0 1.19.87 2.34.99 2.5.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.19 1.11.16 1.53.1.47-.07 1.43-.58 1.64-1.15.2-.57.2-1.05.14-1.16-.06-.1-.22-.16-.46-.28-.24-.12-1.43-.7-1.65-.79-.22-.08-.39-.12-.55.12-.16.25-.63.79-.77.95-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.1-.5.11-.1.25-.28.37-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.33-.76-1.82-.2-.47-.4-.4-.55-.41h-.47z"
+          />
+        </symbol>
+        <symbol id="ico-instagram" viewBox="0 0 24 24">
+          <rect
+            x="2.6"
+            y="2.6"
+            width="18.8"
+            height="18.8"
+            rx="5.6"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.9"
+          />
+          <circle
+            cx="12"
+            cy="12"
+            r="4.5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.9"
+          />
+          <circle cx="17.5" cy="6.5" r="1.25" fill="currentColor" />
+        </symbol>
+        <symbol id="ico-bolha" viewBox="0 0 24 24">
+          <circle
+            cx="12"
+            cy="12"
+            r="9"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            opacity=".55"
+          />
+          <circle cx="9" cy="9" r="2.4" fill="currentColor" opacity=".45" />
+        </symbol>
+        <symbol id="ico-brilho" viewBox="0 0 24 24">
+          <path
+            d="M12 2.5l1.9 5.4 5.4 1.9-5.4 1.9L12 17.1l-1.9-5.4-5.4-1.9 5.4-1.9L12 2.5z"
+            fill="currentColor"
+            opacity=".5"
+          />
+          <path
+            d="M18.5 14l.9 2.4 2.4.9-2.4.9-.9 2.4-.9-2.4-2.4-.9 2.4-.9.9-2.4z"
+            fill="currentColor"
+            opacity=".4"
+          />
+        </symbol>
+      </defs>
+    </svg>
+
+    <!-- ======================= 1. CABEÇALHO FIXO ======================= -->
+    <header class="cabecalho" id="cabecalho">
+      <div class="container cabecalho__conteudo">
+        <a class="marca" href="#inicio">
+          <img
+            id="logo-topo"
+            class="marca__logo"
+            src="assets/logo-otimizada.png"
+            alt="Logomarca Lavanderia Santo Antônio"
+            width="48"
+            height="48"
+          />
+          <span class="marca__nome" data-campo="nome">Lavanderia Santo Antônio</span>
+        </a>
+
+        <nav class="menu" id="menu" aria-label="Menu principal">
+          <ul class="menu__lista">
+            <li><a class="menu__link" href="#sobre">Sobre</a></li>
+            <li><a class="menu__link" href="#precos">Preços</a></li>
+            <li><a class="menu__link" href="#horarios">Horários</a></li>
+            <li><a class="menu__link" href="#localizacao">Localização</a></li>
+          </ul>
+          <a class="botao botao--rosa botao--bloco menu__acao" href="#simulador"
+            >Solicitar Serviço</a
+          >
+        </nav>
+
+        <button
+          class="menu-hamburguer"
+          id="menu-hamburguer"
+          type="button"
+          aria-expanded="false"
+          aria-controls="menu"
+          aria-label="Abrir menu de navegação"
+        >
+          <span class="menu-hamburguer__barra" aria-hidden="true"></span>
+          <span class="menu-hamburguer__barra" aria-hidden="true"></span>
+          <span class="menu-hamburguer__barra" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    <main id="conteudo">
+      <!-- =========================== 2. HERO =========================== -->
+      <section class="hero" id="inicio">
+        <img
+          class="hero__logo"
+          src="assets/logo-otimizada.png"
+          alt="Logomarca Lavanderia Santo Antônio"
+          width="600"
+          height="600"
+        />
+        <h1 class="hero__titulo" data-campo="nome">Lavanderia Santo Antônio</h1>
+        <!-- O slogan vem de CONFIG.slogan e é preenchido pelo js/app.js -->
+        <p class="hero__slogan" data-campo="slogan"></p>
+        <a class="botao botao--rosa botao--grande" href="#simulador"
+          >Solicitar Serviço</a
+        >
+      </section>
+
+      <!-- ==================== 3. SOBRE A LAVANDERIA ==================== -->
+      <section class="secao secao--clara" id="sobre" aria-labelledby="sobre-titulo">
+        <div class="container">
+          <h2 class="secao__titulo" id="sobre-titulo">Sobre a lavanderia</h2>
+          <p class="sobre__texto" id="sobre-texto"></p>
+          <ul class="diferenciais" id="diferenciais"></ul>
+        </div>
+      </section>
+
+      <!-- ====================== 4. TABELA DE PREÇOS ===================== -->
+      <section class="secao" id="precos" aria-labelledby="precos-titulo">
+        <div class="container">
+          <h2 class="secao__titulo" id="precos-titulo">Tabela de preços</h2>
+          <!-- O texto abaixo vem de CONFIG.textoPrecos (js/app.js) -->
+          <p class="secao__descricao" id="texto-precos"></p>
+          <div class="tabela-envolucro">
+            <table class="tabela">
+              <caption class="tabela__legenda">
+                Tabela de preços por peça
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Peça</th>
+                  <th scope="col">Preço por peça</th>
+                </tr>
+              </thead>
+              <tbody id="tabela-precos"></tbody>
+            </table>
+          </div>
+            <!-- Aviso opcional: preenchido por js/app.js a partir de CONFIG.avisoAtendimento -->
+            <div class="aviso" id="aviso-atendimento-precos" data-aviso-atendimento hidden></div>
+        </div>
+      </section>
+
+      <!-- ==================== 5. SIMULADOR DE SERVIÇO ==================== -->
+      <section
+        class="secao secao--clara"
+        id="simulador"
+        aria-labelledby="simulador-titulo"
+      >
+        <div class="container">
+          <h2 class="secao__titulo" id="simulador-titulo">Simulador de serviço</h2>
+          <p class="secao__descricao">
+            Abra uma categoria, informe a quantidade de peças e veja o valor estimado na hora.
+          </p>
+
+          <div class="simulador">
+            <form
+              class="simulador__itens"
+              id="lista-itens"
+              aria-label="Peças do pedido"
+              novalidate
+            ></form>
+
+            <aside class="resumo" aria-live="polite" aria-labelledby="resumo-titulo">
+              <h3 class="resumo__titulo" id="resumo-titulo">Resumo do pedido</h3>
+              <ul class="resumo__lista" id="resumo-itens"></ul>
+              <p class="resumo__vazio" id="resumo-vazio">
+                Nenhuma peça selecionada até agora.
+              </p>
+              <div class="resumo__totais">
+                <p class="resumo__linha">
+                  <span>Total de peças</span>
+                  <strong id="resumo-total-pecas">0</strong>
+                </p>
+                <p class="resumo__linha resumo__linha--destaque">
+                  <span>Valor total estimado</span>
+                  <strong id="resumo-total-valor">R$ 0,00</strong>
+                </p>
+              </div>
+              <button
+                class="botao botao--rosa botao--bloco"
+                id="btn-confirmar"
+                type="button"
+                disabled
+              >
+                Confirmar Serviço
+              </button>
+              <div class="aviso" id="aviso-atendimento-simulador" data-aviso-atendimento hidden></div>
+              <p class="resumo__aviso" id="aviso-pedido" role="status"></p>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================== 6. HORÁRIO DE FUNCIONAMENTO ================== -->
+      <section class="secao" id="horarios" aria-labelledby="horarios-titulo">
+        <div class="container">
+          <h2 class="secao__titulo" id="horarios-titulo">Horário de funcionamento</h2>
+          <p class="secao__descricao">
+            <span class="status" id="status-aberto">
+              <span class="status__bolinha" aria-hidden="true"></span>
+              <span class="status__texto" id="status-texto">Verificando…</span>
+            </span>
+          </p>
+          <div class="tabela-envolucro">
+            <table class="tabela">
+              <caption class="tabela__legenda">Dias e horários de atendimento</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Dia</th>
+                  <th scope="col">Horário</th>
+                </tr>
+              </thead>
+              <tbody id="tabela-horarios"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================== 7. LOCALIZAÇÃO ======================== -->
+      <section
+        class="secao secao--clara"
+        id="localizacao"
+        aria-labelledby="localizacao-titulo"
+      >
+        <div class="container">
+          <h2 class="secao__titulo" id="localizacao-titulo">Onde estamos</h2>
+          <address class="localizacao__endereco" id="endereco"></address>
+          <!-- Referência (CONFIG.referencia): ponto de referência opcional.
+               O bloco some sozinho se o campo estiver vazio. -->
+          <p class="referencia" id="referencia-local" hidden>
+            <span class="referencia__rotulo">Referência:</span>
+            <span id="referencia-texto"></span>
+          </p>
+          <div class="mapa-envolucro">
+            <iframe
+              id="mapa"
+              class="mapa"
+              title="Mapa da localização da Lavanderia Santo Antônio"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <a
+            class="botao botao--marinho"
+            id="btn-rota"
+            href="#"
+            target="_blank"
+            rel="noopener"
+            >Como chegar</a
+          >
+        </div>
+      </section>
+    </main>
+
+    <!-- ========================== 8. RODAPÉ ========================== -->
+    <footer class="rodape">
+      <div class="container rodape__conteudo">
+        <img
+          class="rodape__logo"
+          src="assets/logo-otimizada.png"
+          alt="Logomarca Lavanderia Santo Antônio"
+          width="72"
+          height="72"
+          loading="lazy"
+        />
+        <p class="rodape__nome" data-campo="nome">Lavanderia Santo Antônio</p>
+        <p class="rodape__endereco" id="rodape-endereco"></p>
+        <p class="rodape__referencia" id="rodape-referencia" hidden>
+          <span class="referencia__rotulo">Referência:</span>
+          <span id="rodape-referencia-texto"></span>
+        </p>
+        <div class="rodape__redes">
+          <p class="rodape__social">
+            <a id="rodape-whatsapp" href="#" target="_blank" rel="noopener">
+              <svg class="rodape__social-icone" aria-hidden="true" focusable="false">
+                <use href="#ico-whatsapp"></use>
+              </svg>
+              <span>Falar no WhatsApp</span>
+            </a>
+          </p>
+          <p class="rodape__social" id="rodape-bloco-instagram" hidden>
+            <a
+              id="rodape-instagram"
+              href="#"
+              target="_blank"
+              rel="noopener"
+              aria-label="Instagram da Lavanderia Santo Antônio"
+            >
+              <svg class="rodape__social-icone" aria-hidden="true" focusable="false">
+                <use href="#ico-instagram"></use>
+              </svg>
+              <span>Siga no Instagram</span>
+            </a>
+          </p>
+        </div>
+        <p class="rodape__direitos">
+          &copy; <span id="ano-atual">2026</span>
+          <span data-campo="nome">Lavanderia Santo Antônio</span>. Todos os direitos
+          reservados.
+        </p>
+      </div>
+    </footer>
+
+    <!-- =============== 9. BOTÃO FLUTUANTE DO WHATSAPP =============== -->
+    <a
+      class="whatsapp-flutuante"
+      id="whatsapp-flutuante"
+      href="#"
+      target="_blank"
+      rel="noopener"
+      aria-label="Falar com a Lavanderia Santo Antônio no WhatsApp"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <use href="#ico-whatsapp"></use>
+      </svg>
+      <span class="whatsapp-flutuante__texto">Chamar no WhatsApp</span>
+    </a>
+
+    <!-- Dados editáveis: carregue config.js ANTES de app.js -->
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
