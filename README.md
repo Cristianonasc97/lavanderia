@@ -55,7 +55,9 @@ Checklist final:
 4. **Endereço e mapa** — conferir em `endereco`, `linkMapa` e `linkRota`.
 5. **Instagram** — conferir em `instagram`.
 6. **Aviso de atendimento** — conferir em `avisoAtendimento`.
-7. **SEO** — trocar o `canonical` e o `og:image` do `index.html` pelo endereço final do site depois de publicar.
+7. **SEO** — `canonical`, `og:url` e `og:image` já apontam para
+   `https://lavanderiasantoantonio.github.io/lavanderia/`. Se o endereço
+   mudar (domínio próprio, por exemplo), atualize os três no `index.html`.
 
 ### Exemplos
 

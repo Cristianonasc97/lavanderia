@@ -252,8 +252,13 @@
       }
       var favicon = document.querySelector('link[rel="icon"]');
       if (favicon) favicon.setAttribute('href', cfg.logo);
+
+      // og:image precisa de URL ABSOLUTA (WhatsApp, Facebook etc. não
+      // resolvem caminho relativo). urlAbsoluta() devolve '' em file://,
+      // caso em que mantemos o valor absoluto já escrito no index.html.
       var ogImage = document.querySelector('meta[property="og:image"]');
-      if (ogImage) ogImage.setAttribute('content', cfg.logo);
+      var logoAbsoluta = urlAbsoluta(cfg.logo);
+      if (ogImage && logoAbsoluta) ogImage.setAttribute('content', logoAbsoluta);
     }
 
     var ano = document.getElementById('ano-atual');
