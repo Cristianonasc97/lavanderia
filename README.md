@@ -168,6 +168,27 @@ Para atualizar, arraste a pasta de novo. Para usar seu próprio domínio:
 
 ---
 
+## 📊 Visitantes e visualizações de página
+
+O site usa o **Vercel Web Analytics**, já habilitado no projeto. Ele conta
+visitantes únicos e visualizações de página sem usar cookies.
+
+- **Painel:** [vercel.com](https://vercel.com) → projeto `lavanderiasantoantonio` → **Analytics**
+- Mostra visitantes, page views, páginas mais vistas, origem do acesso, país,
+  navegador e dispositivo, com filtro de período.
+- O script fica no fim do `index.html`:
+
+  ```html
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+  ```
+
+- Por não usar cookies nem dados pessoais, não precisa de banner de consentimento.
+- Os números só existem a partir da data em que o Analytics foi habilitado; não
+  há dados retroativos do GitHub Pages.
+
 ## 🧪 Como testar o simulador
 
 1. Abra o `index.html` (funciona direto do disco, sem servidor).

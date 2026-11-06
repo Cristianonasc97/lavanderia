@@ -395,5 +395,16 @@
     <!-- Dados editáveis: carregue config.js ANTES de app.js -->
     <script src="js/config.js"></script>
     <script src="js/app.js"></script>
+
+    <!-- Vercel Web Analytics: visitantes e visualizações de página.
+         Os dados aparecem em vercel.com → projeto → Analytics. -->
+    <script>
+      window.va =
+        window.va ||
+        function () {
+          (window.vaq = window.vaq || []).push(arguments);
+        };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
   </body>
 </html>
