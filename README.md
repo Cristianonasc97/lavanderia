@@ -56,8 +56,8 @@ Checklist final:
 5. **Instagram** — conferir em `instagram`.
 6. **Aviso de atendimento** — conferir em `avisoAtendimento`.
 7. **SEO** — `canonical`, `og:url` e `og:image` já apontam para
-   `https://lavanderiasantoantonio.github.io/lavanderia/`. Se o endereço
-   mudar (domínio próprio, por exemplo), atualize os três no `index.html`.
+   `https://lavanderiasantoantonio.vercel.app/`. Se o endereço mudar
+   (domínio próprio, por exemplo), atualize os três no `index.html`.
 
 ### Exemplos
 
@@ -127,16 +127,37 @@ Poderiam me atender, por favor?
 
 ## 🚀 Publicar gratuitamente
 
-### Opção 1 — GitHub Pages (recomendado)
+### Opção 1 — Vercel (usada hoje)
+
+O site está publicado em **https://lavanderiasantoantonio.vercel.app/**.
+O projeto `lavanderia` está conectado ao repositório do GitHub e o deploy é
+automático: todo `push` na branch `main` gera uma nova publicação.
+
+Para publicar manualmente pela primeira vez:
+
+1. Instale a CLI: `npm i -g vercel` (ou use `npx vercel`).
+2. Na pasta do projeto, rode `vercel` e faça login.
+3. Confirme as opções: **framework** `Other`, **build command** vazio,
+   **output directory** `.` (a raiz do projeto).
+4. Rode `vercel --prod` para publicar em produção.
+
+O arquivo [`vercel.json`](vercel.json) já define `cleanUrls`, remove a barra
+final das URLs e adiciona cabeçalhos de segurança.
+
+Para atualizar o site, basta "commitar" e enviar para o GitHub — a Vercel
+publica sozinha. Também dá para arrastar a pasta do projeto em
+[vercel.com/new](https://vercel.com/new).
+
+### Opção 2 — GitHub Pages
 
 1. Crie uma conta em [github.com](https://github.com) e um repositório novo (pode ser privado… o Pages exige plano gratuito com repositório **público**).
 2. Suba os arquivos (`index.html`, `css/`, `js/`, `assets/`) para o repositório.
 3. O GitHub Pages gratuito exige repositório público.
 4. Em 1–2 minutos o site fica no ar em `https://seu-usuario.github.io/nome-do-repo/`.
+   Se for usar esse endereço, atualize `canonical`, `og:url` e `og:image` no
+   `index.html`.
 
-Atualizar o site é só "commitar" as mudanças: o GitHub Pages publica sozinho.
-
-### Opção 2 — Netlify (mais simples, por arrastar e soltar)
+### Opção 3 — Netlify (arrastar e soltar)
 
 1. Acesse [app.netlify.com/drop](https://app.netlify.com/drop).
 2. **Arraste a pasta inteira** do projeto para a página.
@@ -144,10 +165,6 @@ Atualizar o site é só "commitar" as mudanças: o GitHub Pages publica sozinho.
 
 Para atualizar, arraste a pasta de novo. Para usar seu próprio domínio:
 **Site settings → Domain management → Add a domain**.
-
-### Opção 3 — Cloudflare Pages / Vercel
-
- também aceitam arrastar e soltar ou conectar o GitHub, com HTTPS automático.
 
 ---
 
