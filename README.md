@@ -44,6 +44,7 @@ Não é preciso mexer em `index.html` nem em `css/style.css`.
 | `precos` | Tabela de preços **e** o simulador (com os grupos de peças) |
 | `mensagemWhatsApp` | Texto de abertura da mensagem no WhatsApp |
 | `mensagemWhatsAppFinal` | Frase final da mensagem |
+| `desenvolvedor` | Crédito no rodapé: `nome` (vazio = não aparece) e `link` opcional do desenvolvedor |
 
 ### Antes de publicar (importante!)
 

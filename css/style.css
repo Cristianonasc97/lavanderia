@@ -1072,6 +1072,30 @@ a {
   color: #a9d8ea;
 }
 
+/* Crédito do desenvolvedor — discreto, logo abaixo dos direitos reservados.
+   Cor um pouco mais suave que o texto do rodapé, mas ainda com bom contraste
+   sobre o azul-marinho (#9ccbdf sobre #0b3a7e = 6,26:1). */
+.rodape__credito {
+  margin: 8px 0 0;
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.4;
+  text-align: center;
+  color: #9ccbdf;
+  overflow-wrap: break-word;
+}
+
+.rodape__credito a {
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+}
+
+.rodape__credito a:hover,
+.rodape__credito a:focus-visible {
+  text-decoration: underline;
+}
+
 /* ------------------- 15. WHATSAPP FLUTUANTE ------------------------- */
 .whatsapp-flutuante {
   position: fixed;

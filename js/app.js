@@ -348,6 +348,41 @@
     }
   }
 
+  /**
+   * Crédito do desenvolvedor no fim do rodapé.
+   * Usa CONFIG.desenvolvedor.nome e CONFIG.desenvolvedor.link.
+   * Nome vazio = o bloco inteiro fica oculto. Link vazio = texto simples.
+   */
+  function aplicarCreditoDesenvolvedor() {
+    var alvo = document.getElementById('rodape-credito');
+    if (!alvo) return;
+
+    var dados = cfg.desenvolvedor || {};
+    var nome = String(dados.nome == null ? '' : dados.nome).trim();
+    var link = String(dados.link == null ? '' : dados.link).trim();
+
+    alvo.textContent = '';
+
+    if (!nome) {
+      alvo.setAttribute('hidden', 'hidden');
+      return;
+    }
+
+    alvo.appendChild(document.createTextNode('Desenvolvido por '));
+
+    if (link) {
+      var ancora = elemento('a', null, nome);
+      ancora.href = link;
+      ancora.target = '_blank';
+      ancora.rel = 'noopener';
+      alvo.appendChild(ancora);
+    } else {
+      alvo.appendChild(document.createTextNode(nome));
+    }
+
+    alvo.removeAttribute('hidden');
+  }
+
   /* ------------------------------------------------------------------ *
    * 5. SEÇÃO "SOBRE" — descrição e diferenciais
    * ------------------------------------------------------------------ */
@@ -1015,6 +1050,7 @@
   function iniciar() {
     aplicarIdentidade();
     aplicarContato();
+    aplicarCreditoDesenvolvedor();
     aplicarAvisosAtendimento();
     montarSobre();
     montarTabelaPrecos();

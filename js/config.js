@@ -212,6 +212,18 @@ const CONFIG = {
   ],
 
   /* ----------------------------------------------------------------------
+     CRÉDITO DO DESENVOLVEDOR (rodapé)
+     ---------------------------------------------------------------------- */
+  // Crédito do desenvolvedor, exibido de forma discreta no fim do rodapé.
+  // "nome" vazio ('') = o crédito não aparece.
+  // "link" é opcional: com link, o nome vira clicável (abre em nova aba);
+  // vazio ('') = texto simples, sem link.
+  desenvolvedor: {
+    nome: 'Cristiano Santos',
+    link: '',
+  },
+
+  /* ----------------------------------------------------------------------
      MENSAGEM DO WHATSAPP
      ----------------------------------------------------------------------
      A mensagem enviada ao clicar em "Confirmar Serviço" é montada assim:
