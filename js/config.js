@@ -8,6 +8,15 @@
    Salve o arquivo e atualize a página: as mudanças aparecem na hora.
    ========================================================================== */
 
+/* ------------------------------------------------------------------------
+   PREÇO DAS PEÇAS COMUNS
+   ------------------------------------------------------------------------
+   ESTE É O ÚNICO LUGAR PARA ALTERAR O PREÇO DAS PEÇAS COMUNS.
+   A chave é o "id" de um serviço (veja "servicos" logo abaixo) e o valor é
+   o preço por peça, em REAIS, como número (ex.: 1.5 = R$ 1,50).
+   ------------------------------------------------------------------------ */
+const PECA_COMUM = { 'lavar-passar': 1.5, passar: 1.0 };
+
 const CONFIG = {
   /* ----------------------------------------------------------------------
      IDENTIDADE
@@ -28,6 +37,11 @@ const CONFIG = {
 
   // Texto que aparece logo abaixo do título da seção "Tabela de preços".
   textoPrecos: 'Valores por peça, organizados por categoria.',
+
+  // Texto pequeno exibido abaixo dos cards "Nossos serviços".
+  textoServicos:
+    'Valores por peça comum: camiseta, calça, bermuda, vestido, meia, lençol fino, ' +
+    'fronha, saia, sutiã e toalha. Os demais itens têm preço próprio, na tabela abaixo.',
 
   // Texto da seção "Sobre a lavanderia".
   //
@@ -162,53 +176,85 @@ const CONFIG = {
   ],
 
   /* ----------------------------------------------------------------------
+     SERVIÇOS OFERECIDOS
+     ----------------------------------------------------------------------
+     Cada serviço tem:
+     - "id"        : identificador curto (sem acento, sem espaço). É a chave
+                     usada em "precos[].valores" e nos botões do simulador.
+     - "nome"      : nome exibido nos cards, na tabela e no resumo do pedido.
+     - "preco"     : preço de referência da peça comum, em REAIS, como número.
+                     Para as peças comuns, use sempre PECA_COMUM (acima).
+     - "descricao" : texto curto exibido no card do serviço.
+
+     A ordem desta lista é a ordem dos cards, das colunas da tabela e dos
+     botões do simulador. Pode adicionar ou remover serviços à vontade.
+     ---------------------------------------------------------------------- */
+  servicos: [
+    {
+      id: 'passar',
+      nome: 'Apenas passar',
+      preco: PECA_COMUM.passar,
+      descricao: 'Passamos as suas peças.',
+    },
+    {
+      id: 'lavar-passar',
+      nome: 'Lavar e passar',
+      preco: PECA_COMUM['lavar-passar'],
+      descricao: 'Lavamos e passamos as suas peças.',
+    },
+  ],
+
+  /* ----------------------------------------------------------------------
      TABELA DE PREÇOS
      ----------------------------------------------------------------------
      Valores reais da Lavanderia Santo Antônio, organizados por grupo.
-     - "id"    : identificador único e curto (sem acento, sem espaço).
-     - "grupo" : categoria em que o item aparece na tabela e no simulador.
-     - "nome"  : nome que aparece na tabela e na mensagem do WhatsApp.
-     - "preco" : preço por peça, em REAIS, como número (ex.: 12 ou 12.50).
-     - Você pode ADICIONAR ou REMOVER itens à vontade.
+     - "id"     : identificador único e curto (sem acento, sem espaço).
+     - "grupo"  : categoria em que o item aparece na tabela e no simulador.
+     - "nome"   : nome que aparece na tabela e na mensagem do WhatsApp.
+     - "valores": preço por serviço, em REAIS, como número (ex.: 1.5 = R$ 1,50).
+                  A chave é o "id" de um serviço (campo "servicos").
+                  Ex.: { 'lavar-passar': 1.5, passar: 1.0 }
+                  Item sem preço em um serviço não aparece no simulador desse
+                  serviço e, na tabela, mostra "—" na coluna correspondente.
+
+     As peças comuns usam PECA_COMUM (o único lugar onde o preço delas é
+     definido). Pode ADICIONAR ou REMOVER itens à vontade.
      ---------------------------------------------------------------------- */
   precos: [
-    // --- Lavar e passar: peças comuns ---
-    { id: 'camiseta', grupo: 'Lavar e passar: peças comuns', nome: 'Camiseta', preco: 1.5 },
-    { id: 'calca', grupo: 'Lavar e passar: peças comuns', nome: 'Calça', preco: 1.5 },
-    { id: 'bermuda', grupo: 'Lavar e passar: peças comuns', nome: 'Bermuda', preco: 1.5 },
-    { id: 'vestido', grupo: 'Lavar e passar: peças comuns', nome: 'Vestido', preco: 1.5 },
-    { id: 'meia', grupo: 'Lavar e passar: peças comuns', nome: 'Meia', preco: 1.5 },
-    { id: 'lencol-fino', grupo: 'Lavar e passar: peças comuns', nome: 'Lençol fino', preco: 1.5 },
-    { id: 'fronha', grupo: 'Lavar e passar: peças comuns', nome: 'Fronha', preco: 1.5 },
-    { id: 'saia', grupo: 'Lavar e passar: peças comuns', nome: 'Saia', preco: 1.5 },
-    { id: 'sutia', grupo: 'Lavar e passar: peças comuns', nome: 'Sutiã', preco: 1.5 },
-    { id: 'toalha', grupo: 'Lavar e passar: peças comuns', nome: 'Toalha', preco: 1.5 },
+    // --- Peças comuns (preço definido em PECA_COMUM) ---
+    { id: 'camiseta', grupo: 'Peças comuns', nome: 'Camiseta', valores: PECA_COMUM },
+    { id: 'calca', grupo: 'Peças comuns', nome: 'Calça', valores: PECA_COMUM },
+    { id: 'bermuda', grupo: 'Peças comuns', nome: 'Bermuda', valores: PECA_COMUM },
+    { id: 'vestido', grupo: 'Peças comuns', nome: 'Vestido', valores: PECA_COMUM },
+    { id: 'meia', grupo: 'Peças comuns', nome: 'Meia', valores: PECA_COMUM },
+    { id: 'lencol-fino', grupo: 'Peças comuns', nome: 'Lençol fino', valores: PECA_COMUM },
+    { id: 'fronha', grupo: 'Peças comuns', nome: 'Fronha', valores: PECA_COMUM },
+    { id: 'saia', grupo: 'Peças comuns', nome: 'Saia', valores: PECA_COMUM },
+    { id: 'sutia', grupo: 'Peças comuns', nome: 'Sutiã', valores: PECA_COMUM },
+    { id: 'toalha', grupo: 'Peças comuns', nome: 'Toalha', valores: PECA_COMUM },
 
-    // --- Apenas passar ---
-    { id: 'so-passar', grupo: 'Apenas passar', nome: 'Peça comum (só passar)', preco: 1.0 },
+    // --- Outras roupas (somente lavar e passar) ---
+    { id: 'cueca', grupo: 'Outras roupas', nome: 'Cueca', valores: { 'lavar-passar': 2.0 } },
+    { id: 'calcinha', grupo: 'Outras roupas', nome: 'Calcinha', valores: { 'lavar-passar': 2.0 } },
+    { id: 'camisa-social', grupo: 'Outras roupas', nome: 'Camisa social', valores: { 'lavar-passar': 2.0 } },
+    { id: 'paleto', grupo: 'Outras roupas', nome: 'Paletó completo', valores: { 'lavar-passar': 20.0 } },
+    { id: 'casaco', grupo: 'Outras roupas', nome: 'Casaco', valores: { 'lavar-passar': 3.0 } },
 
-    // --- Outras roupas ---
-    { id: 'cueca', grupo: 'Outras roupas', nome: 'Cueca', preco: 2.0 },
-    { id: 'calcinha', grupo: 'Outras roupas', nome: 'Calcinha', preco: 2.0 },
-    { id: 'camisa-social', grupo: 'Outras roupas', nome: 'Camisa social', preco: 2.0 },
-    { id: 'paleto', grupo: 'Outras roupas', nome: 'Paletó completo', preco: 20.0 },
-    { id: 'casaco', grupo: 'Outras roupas', nome: 'Casaco', preco: 3.0 },
+    // --- Casa e cama (somente lavar e passar) ---
+    { id: 'edredom-solteiro', grupo: 'Casa e cama', nome: 'Edredom de solteiro', valores: { 'lavar-passar': 10.0 } },
+    { id: 'edredom-casal', grupo: 'Casa e cama', nome: 'Edredom de casal', valores: { 'lavar-passar': 20.0 } },
+    { id: 'coberta', grupo: 'Casa e cama', nome: 'Coberta', valores: { 'lavar-passar': 10.0 } },
+    { id: 'cortina-quarto', grupo: 'Casa e cama', nome: 'Cortina de quarto (pequena)', valores: { 'lavar-passar': 30.0 } },
+    { id: 'cortina-sala', grupo: 'Casa e cama', nome: 'Cortina de sala (grande)', valores: { 'lavar-passar': 70.0 } },
+    { id: 'rede-pequena', grupo: 'Casa e cama', nome: 'Rede pequena', valores: { 'lavar-passar': 15.0 } },
+    { id: 'rede-grande', grupo: 'Casa e cama', nome: 'Rede grande', valores: { 'lavar-passar': 20.0 } },
 
-    // --- Casa e cama ---
-    { id: 'edredom-solteiro', grupo: 'Casa e cama', nome: 'Edredom de solteiro', preco: 10.0 },
-    { id: 'edredom-casal', grupo: 'Casa e cama', nome: 'Edredom de casal', preco: 20.0 },
-    { id: 'coberta', grupo: 'Casa e cama', nome: 'Coberta', preco: 10.0 },
-    { id: 'cortina-quarto', grupo: 'Casa e cama', nome: 'Cortina de quarto (pequena)', preco: 30.0 },
-    { id: 'cortina-sala', grupo: 'Casa e cama', nome: 'Cortina de sala (grande)', preco: 70.0 },
-    { id: 'rede-pequena', grupo: 'Casa e cama', nome: 'Rede pequena', preco: 15.0 },
-    { id: 'rede-grande', grupo: 'Casa e cama', nome: 'Rede grande', preco: 20.0 },
-
-    // --- Calçados e conforto ---
-    { id: 'tenis', grupo: 'Calçados e conforto', nome: 'Tênis', preco: 15.0 },
-    { id: 'travesseiro', grupo: 'Calçados e conforto', nome: 'Travesseiro', preco: 15.0 },
-    { id: 'almofada-pequena', grupo: 'Calçados e conforto', nome: 'Almofada pequena', preco: 5.0 },
-    { id: 'almofada-grande', grupo: 'Calçados e conforto', nome: 'Almofada grande', preco: 15.0 },
-    { id: 'urso', grupo: 'Calçados e conforto', nome: 'Urso de pelúcia', preco: 5.0 },
+    // --- Calçados e conforto (somente lavar e passar) ---
+    { id: 'tenis', grupo: 'Calçados e conforto', nome: 'Tênis', valores: { 'lavar-passar': 15.0 } },
+    { id: 'travesseiro', grupo: 'Calçados e conforto', nome: 'Travesseiro', valores: { 'lavar-passar': 15.0 } },
+    { id: 'almofada-pequena', grupo: 'Calçados e conforto', nome: 'Almofada pequena', valores: { 'lavar-passar': 5.0 } },
+    { id: 'almofada-grande', grupo: 'Calçados e conforto', nome: 'Almofada grande', valores: { 'lavar-passar': 15.0 } },
+    { id: 'urso', grupo: 'Calçados e conforto', nome: 'Urso de pelúcia', valores: { 'lavar-passar': 5.0 } },
   ],
 
   /* ----------------------------------------------------------------------

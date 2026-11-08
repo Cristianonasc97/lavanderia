@@ -574,6 +574,104 @@ a {
   font-weight: 700;
 }
 
+/* Subtítulo "Preço por peça" — menor que o título da seção */
+.tabela__subtitulo {
+  margin: 0 0 14px;
+  font-size: 1.15rem;
+}
+
+/* Rolagem horizontal apenas dentro do contêiner da tabela de preços.
+   A legenda dessa tabela fica só para leitores de tela, então o cabeçalho
+   de colunas passa a ocupar o topo: o overflow recortado pelo raio do
+   contêiner mantém os cantos superiores arredondados. */
+.tabela-envolucro--rolavel {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--raio);
+}
+
+.tabela-envolucro--rolavel .tabela {
+  min-width: 560px;
+}
+
+/* Colunas de preço (uma por serviço), alinhadas à direita */
+.tabela th.tabela__valor,
+.tabela td.tabela__valor {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.tabela td.tabela__valor {
+  font-weight: 800;
+  color: var(--azul-marinho);
+}
+
+/* ------------------- 9.1 CARDS "NOSSOS SERVIÇOS" -------------------- */
+.servicos {
+  margin-bottom: 32px;
+}
+
+.servicos__titulo {
+  margin-bottom: 14px;
+  font-size: 1.2rem;
+}
+
+.servicos__lista {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.servico-card {
+  padding: 20px;
+  background: var(--branco);
+  border: 2px solid var(--azul-marinho);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+}
+
+.servico-card__nome {
+  margin: 0 0 6px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--azul-marinho);
+}
+
+.servico-card__preco {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 8px;
+}
+
+.servico-card__valor {
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--magenta);
+}
+
+.servico-card__por {
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+.servico-card__descricao {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--texto-suave);
+}
+
+.servicos__texto {
+  max-width: 72ch;
+  margin: 14px 0 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--texto-suave);
+}
+
 /* ------------------------- 10. SIMULADOR ----------------------------- */
 /* No celular o botão "Confirmar Serviço" fica logo acima do fim da seção,
    onde o botão flutuante do WhatsApp flutua. Esta folga extra evita que
@@ -593,6 +691,174 @@ a {
   display: grid;
   gap: 12px;
   margin: 0;
+}
+
+.simulador__coluna {
+  min-width: 0;
+}
+
+/* Passos "1. Escolha o serviço" e "2. Informe as peças" */
+.passo {
+  min-width: 0;
+  min-inline-size: 0;
+  margin: 0 0 24px;
+  padding: 0;
+  border: 0;
+}
+
+.passo:last-child {
+  margin-bottom: 0;
+}
+
+.passo__titulo {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0 0 12px;
+  font-family: inherit;
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--azul-marinho);
+}
+
+/* Cartões de serviço do passo 1 (botões de rádio) */
+.servicos-escolha {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.servico-opcao {
+  display: block;
+  cursor: pointer;
+}
+
+.servico-opcao__corpo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height: 100%;
+  /* espaço à direita reservado para o indicador de rádio */
+  padding: 16px 52px 16px 18px;
+  background: var(--branco);
+  border: 2px solid var(--azul-marinho);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+/* Hover: borda mais forte (além da sombra já existente) */
+.servico-opcao:hover .servico-opcao__corpo {
+  border-color: var(--rosa-escuro);
+  box-shadow: var(--sombra-alta);
+}
+
+/* Selecionado: borda rosa mais grossa + fundo azul-claro suave.
+   O padding diminui 1px para compensar o aumento da borda e o cartão
+   não "pular" de tamanho. O visto no indicador reforça a seleção. */
+.servico-opcao__radio:checked + .servico-opcao__corpo {
+  padding: 15px 51px 15px 17px;
+  background: #e6f7ff;
+  border-width: 3px;
+  border-color: var(--rosa);
+  box-shadow: 0 6px 20px rgba(255, 63, 164, 0.22);
+}
+
+/* Foco de teclado: anel bem visível + borda mais forte */
+.servico-opcao:focus-within .servico-opcao__corpo {
+  border-color: var(--rosa-escuro);
+  outline: 3px solid var(--azul-marinho);
+  outline-offset: 3px;
+}
+
+/* Indicador visual de rádio no canto superior direito */
+.servico-opcao__indicador {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: var(--branco);
+  border: 2px solid var(--azul-marinho);
+  border-radius: 50%;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.servico-opcao__indicador svg {
+  width: 14px;
+  height: 14px;
+  color: var(--branco);
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.servico-opcao__radio:checked + .servico-opcao__corpo .servico-opcao__indicador {
+  background: var(--rosa);
+  border-color: var(--rosa);
+}
+
+.servico-opcao__radio:checked
+  + .servico-opcao__corpo
+  .servico-opcao__indicador
+  svg {
+  opacity: 1;
+}
+
+.servico-opcao__nome {
+  font-size: 1.12rem;
+  font-weight: 800;
+  color: var(--azul-marinho);
+}
+
+.servico-opcao__preco {
+  font-size: 0.95rem;
+  color: var(--texto-suave);
+}
+
+.servico-opcao__valor {
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--magenta);
+}
+
+.servico-opcao__descricao {
+  font-size: 0.92rem;
+  color: var(--texto-suave);
+}
+
+/* Dica exibida enquanto nenhum serviço foi escolhido */
+.simulador__dica {
+  margin: 0;
+  padding: 14px 16px;
+  color: var(--texto-suave);
+  background: var(--branco);
+  border: 2px dashed var(--azul-marinho);
+  border-radius: var(--raio-pequeno);
+  font-size: 0.97rem;
+}
+
+/* Aviso de itens removidos ao trocar de serviço */
+.simulador__aviso-itens {
+  margin: 12px 0 0;
+  padding: 10px 14px;
+  background: #fff6e5;
+  border: 2px solid #b26a00;
+  border-radius: var(--raio-pequeno);
+  color: #6b3f00;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.simulador__dica[hidden],
+.simulador__aviso-itens[hidden] {
+  display: none;
 }
 
 /* Blocos recolhíveis de peças (um <details> por grupo do config.js) */
@@ -790,6 +1056,28 @@ a {
 .resumo__titulo {
   font-size: 1.25rem;
   margin-bottom: 14px;
+}
+
+/* Linha "Serviço: <nome>" no topo do resumo */
+.resumo__servico {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  font-size: 0.97rem;
+  border-bottom: 1px solid #d6ecf7;
+}
+
+.resumo__servico span {
+  color: var(--texto-suave);
+}
+
+.resumo__servico strong {
+  color: var(--azul-marinho);
+  font-weight: 800;
+  text-align: right;
 }
 
 .resumo__lista {
@@ -1188,6 +1476,12 @@ a {
 
   .diferenciais {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Cards de serviço lado a lado no desktop (empilhados no celular) */
+  .servicos__lista,
+  .servicos-escolha {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   }
 
   .simulador {

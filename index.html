@@ -196,16 +196,26 @@
           <h2 class="secao__titulo" id="precos-titulo">Tabela de preços</h2>
           <!-- O texto abaixo vem de CONFIG.textoPrecos (js/app.js) -->
           <p class="secao__descricao" id="texto-precos"></p>
-          <div class="tabela-envolucro">
+
+          <!-- Nossos serviços: cards montados por js/app.js a partir de
+               CONFIG.servicos. O bloco fica oculto quando não há serviços. -->
+          <div class="servicos" id="nossos-servicos" hidden>
+            <h3 class="servicos__titulo">Nossos serviços</h3>
+            <ul class="servicos__lista" id="lista-servicos-precos"></ul>
+            <!-- Texto pequeno vindo de CONFIG.textoServicos -->
+            <p class="servicos__texto" id="texto-servicos"></p>
+          </div>
+
+          <h3 class="tabela__subtitulo">Preço por peça</h3>
+
+          <div class="tabela-envolucro tabela-envolucro--rolavel">
             <table class="tabela">
-              <caption class="tabela__legenda">
+              <caption class="visualmente-oculto">
                 Tabela de preços por peça
               </caption>
               <thead>
-                <tr>
-                  <th scope="col">Peça</th>
-                  <th scope="col">Preço por peça</th>
-                </tr>
+                <!-- O cabeçalho é montado por js/app.js: uma coluna por serviço -->
+                <tr id="tabela-precos-cabecalho"></tr>
               </thead>
               <tbody id="tabela-precos"></tbody>
             </table>
@@ -224,19 +234,46 @@
         <div class="container">
           <h2 class="secao__titulo" id="simulador-titulo">Simulador de serviço</h2>
           <p class="secao__descricao">
-            Abra uma categoria, informe a quantidade de peças e veja o valor estimado na hora.
+            Escolha o serviço, informe a quantidade de peças e veja o valor estimado na hora.
           </p>
 
           <div class="simulador">
-            <form
-              class="simulador__itens"
-              id="lista-itens"
-              aria-label="Peças do pedido"
-              novalidate
-            ></form>
+            <div class="simulador__coluna">
+              <!-- Passo 1: serviço (cartões com botões de rádio) -->
+              <fieldset class="passo" id="passo-servico">
+                <legend class="passo__titulo">1. Escolha o serviço</legend>
+                <div class="servicos-escolha" id="lista-servicos"></div>
+              </fieldset>
+
+              <!-- Passo 2: peças do serviço escolhido -->
+              <div class="passo" id="passo-pecas">
+                <h3 class="passo__titulo" id="passo-pecas-titulo">2. Informe as peças</h3>
+                <p class="simulador__dica" id="pecas-vazio">
+                  Escolha um serviço para ver as peças.
+                </p>
+                <form
+                  class="simulador__itens"
+                  id="lista-itens"
+                  aria-label="Peças do pedido"
+                  novalidate
+                  hidden
+                ></form>
+                <p
+                  class="simulador__aviso-itens"
+                  id="aviso-itens"
+                  role="status"
+                  aria-live="polite"
+                  hidden
+                ></p>
+              </div>
+            </div>
 
             <aside class="resumo" aria-live="polite" aria-labelledby="resumo-titulo">
               <h3 class="resumo__titulo" id="resumo-titulo">Resumo do pedido</h3>
+              <p class="resumo__servico">
+                <span>Serviço:</span>
+                <strong id="resumo-servico">não escolhido</strong>
+              </p>
               <ul class="resumo__lista" id="resumo-itens"></ul>
               <p class="resumo__vazio" id="resumo-vazio">
                 Nenhuma peça selecionada até agora.
@@ -260,7 +297,9 @@
                 Confirmar Serviço
               </button>
               <div class="aviso" id="aviso-atendimento-simulador" data-aviso-atendimento hidden></div>
-              <p class="resumo__aviso" id="aviso-pedido" role="status"></p>
+              <p class="resumo__aviso" id="aviso-pedido" role="status">
+                Escolha o serviço e informe ao menos uma peça.
+              </p>
             </aside>
           </div>
         </div>

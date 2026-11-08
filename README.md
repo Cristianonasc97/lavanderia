@@ -41,7 +41,9 @@ Não é preciso mexer em `index.html` nem em `css/style.css`.
 | `linkRota` | Opcional. Vazio = o botão "Como chegar" é montado pelo endereço |
 | `horarios` | Lista de dias e horários (controla também o "Aberto agora") |
 | `diferenciais` | Cards da seção "Sobre" |
-| `precos` | Tabela de preços **e** o simulador (com os grupos de peças) |
+| `servicos` | Serviços oferecidos: cards, colunas da tabela e passo 1 do simulador |
+| `textoServicos` | Texto pequeno exibido abaixo dos cards "Nossos serviços" |
+| `precos` | Itens e preços por serviço (`valores`) da tabela e do simulador |
 | `mensagemWhatsApp` | Texto de abertura da mensagem no WhatsApp |
 | `mensagemWhatsAppFinal` | Frase final da mensagem |
 | `desenvolvedor` | Crédito no rodapé: `nome` (vazio = não aparece) e `link` opcional do desenvolvedor |
@@ -51,7 +53,7 @@ Não é preciso mexer em `index.html` nem em `css/style.css`.
 Checklist final:
 
 1. **Nº do WhatsApp** — conferir em `whatsapp` (somente dígitos, com `55`).
-2. **Preços** — conferir em `precos`.
+2. **Preços** — conferir `PECA_COMUM` (peças comuns), `servicos` e `precos`.
 3. **Horários** — conferir em `horarios` (o indicador "Aberto agora" usa `inicio` e `fim`).
 4. **Endereço e mapa** — conferir em `endereco`, `linkMapa` e `linkRota`.
 5. **Instagram** — conferir em `instagram`.
@@ -62,8 +64,28 @@ Checklist final:
 
 ### Exemplos
 
-**Preços** — adicione ou remova linhas livremente (o site se adapta).
-O campo `grupo` é **opcional** e serve só para organizar a tela:
+**Serviços** — a ordem de `servicos` define a ordem dos cards "Nossos
+serviços", das colunas da tabela e dos botões do passo 1 do simulador.
+O `id` é a chave usada em `precos[].valores`:
+
+```js
+servicos: [
+  { id: 'passar',       nome: 'Apenas passar',  preco: PECA_COMUM.passar,           descricao: 'Passamos as suas peças.' },
+  { id: 'lavar-passar', nome: 'Lavar e passar', preco: PECA_COMUM['lavar-passar'], descricao: 'Lavamos e passamos as suas peças.' },
+],
+```
+
+**Preços das peças comuns** — definidos em um único lugar, `PECA_COMUM`.
+A chave é o `id` do serviço e o valor é o preço por peça:
+
+```js
+// Único lugar para alterar o preço das peças comuns
+const PECA_COMUM = { 'lavar-passar': 1.5, passar: 1.0 };
+```
+
+**Preços** — cada item tem `id`, `grupo`, `nome` e `valores`. Em `valores`,
+a chave é o `id` de um serviço e o valor é o preço por peça. O campo `grupo` é
+**opcional** e serve só para organizar a tela:
 
 - Peças com o **mesmo texto** de `grupo` aparecem juntas, na ordem em que o
   grupo aparece pela primeira vez no arquivo.
@@ -71,6 +93,13 @@ O campo `grupo` é **opcional** e serve só para organizar a tela:
   linha de título; no simulador o grupo vira um bloco recolhível.
 - Peça **sem** `grupo` (ou com `grupo` vazio) vai para um grupo chamado
   **"Outros"** — nada quebra.
+- Item **sem preço** em um serviço (`valores` sem aquela chave) não aparece no
+  simulador desse serviço e, na tabela, mostra **"—"** na coluna dele.
+- Os itens de cada grupo são ordenados automaticamente pelo **preço** (do menor
+  para o maior) e, em caso de empate, pelo **nome** em ordem alfabética,
+  ignorando acentos e maiúsculas: no simulador vale o preço do serviço escolhido
+  e, na tabela, o menor preço disponível do item entre os serviços.
+- Categorias sem nenhum item disponível para o serviço escolhido ficam ocultas.
 - O simulador abre só o primeiro grupo; os demais começam fechados, para a
   lista não ficar enorme no celular. Ao escolher uma peça, o grupo abre e o
   título mostra a quantidade, ex.: `Casa e cama (2)`.
@@ -79,23 +108,23 @@ O campo `grupo` é **opcional** e serve só para organizar a tela:
 
 ```js
 precos: [
-  // "Lavar e passar: peças comuns"
-  { id: 'camiseta', grupo: 'Lavar e passar: peças comuns', nome: 'Camiseta', preco: 1.5 },
-  { id: 'calca', grupo: 'Lavar e passar: peças comuns', nome: 'Calça', preco: 1.5 },
+  // Peças comuns: usam PECA_COMUM (mesmo preço em todos os itens do grupo)
+  { id: 'camiseta', grupo: 'Peças comuns', nome: 'Camiseta', valores: PECA_COMUM },
 
-  // "Casa e cama"
-  { id: 'edredom-casal', grupo: 'Casa e cama', nome: 'Edredom de casal', preco: 20.0 },
+  // Outras roupas: só têm preço em "lavar-passar"
+  { id: 'paleto', grupo: 'Outras roupas', nome: 'Paletó completo', valores: { 'lavar-passar': 20.0 } },
 
-  // "Apenas passar"
-  { id: 'so-passar', grupo: 'Apenas passar', nome: 'Peça comum (só passar)', preco: 1.0 },
+  // Casa e cama
+  { id: 'edredom-casal', grupo: 'Casa e cama', nome: 'Edredom de casal', valores: { 'lavar-passar': 20.0 } },
 
   // Sem "grupo": aparece no grupo "Outros"
-  { id: 'item-avulso', nome: 'Peça avulsa', preco: 5.0 },
+  { id: 'item-avulso', nome: 'Peça avulsa', valores: { 'lavar-passar': 5.0 } },
 ],
 ```
 
-O `id` precisa ser único (é usado nos campos do simulador). A ordem dos grupos
-é a ordem de primeira aparição no arquivo — para mudar a ordem, mova as linhas.
+O `id` do item precisa ser único (é usado nos campos do simulador) e o `id`
+do serviço precisa bater com as chaves de `valores`. A ordem dos grupos é a
+ordem de primeira aparição no arquivo — para mudar a ordem, mova as linhas.
 
 **Horários** — `dias` usa `0 = Domingo … 6 = Sábado`:
 
@@ -113,13 +142,14 @@ quantidade maior que zero, sem os nomes dos grupos):
 ```
 Olá! Gostaria de solicitar um serviço de lavanderia.
 
+Serviço: Lavar e passar
+
 Peças:
 - 3x Camiseta
-- 1x Calça
-- 1x Edredom de casal
+- 1x Paletó completo
 
-Total de peças: 5
-Valor total estimado: R$ 26,00
+Total de peças: 4
+Valor total estimado: R$ 24,50
 
 Poderiam me atender, por favor?
 ```
@@ -194,11 +224,13 @@ visitantes únicos e visualizações de página sem usar cookies.
 
 1. Abra o `index.html` (funciona direto do disco, sem servidor).
 2. Vá até **Simulador de serviço**.
-3. Abra uma categoria (só a primeira começa aberta) e use os botões **−** e **+**
-   ou digite a quantidade (o total atualiza na hora).
-4. O título do grupo mostra quantas peças já foram escolhidas nele, ex.: `Casa e cama (2)`.
-5. O botão **Confirmar Serviço** só libera quando há pelo menos uma peça.
-6. Ao confirmar, o WhatsApp abre em nova aba com o pedido já escrito.
+3. Em **1. Escolha o serviço**, selecione "Apenas passar" ou "Lavar e passar".
+4. Em **2. Informe as peças**, abra uma categoria (só a primeira começa aberta)
+   e use os botões **−** e **+** ou digite a quantidade (o total atualiza na hora).
+5. O título do grupo mostra quantas peças já foram escolhidas nele, ex.: `Casa e cama (2)`.
+6. O resumo mostra o serviço escolhido; o botão **Confirmar Serviço** só libera
+   com um serviço escolhido e pelo menos uma peça.
+7. Ao confirmar, o WhatsApp abre em nova aba com o pedido já escrito.
 
 ## ♿ Acessibilidade e desempenho
 

@@ -169,19 +169,57 @@
   }
 
   /* ------------------------------------------------------------------ *
-   * 3. LISTA DE PREÇOS (garante formato válido mesmo se o config falhar)
+   * 3. SERVIÇOS E PREÇOS (formato válido mesmo se o config falhar)
    * ------------------------------------------------------------------ */
+  var servicos = Array.isArray(cfg.servicos) ? cfg.servicos.filter(Boolean) : [];
+
+  servicos.forEach(function (s, indice) {
+    if (!s.id) s.id = 'servico-' + indice;
+    s.id = String(s.id);
+    if (!s.nome) s.nome = s.id;
+    s.nome = String(s.nome);
+    s.descricao = s.descricao == null ? '' : String(s.descricao);
+
+    var preco = Number(s.preco);
+    s.preco = isNaN(preco) || preco < 0 ? 0 : preco;
+  });
+
   var precos = Array.isArray(cfg.precos) ? cfg.precos.filter(Boolean) : [];
 
   precos.forEach(function (p, indice) {
     if (!p.id) p.id = 'peca-' + indice;
+    p.id = String(p.id);
     if (!p.nome) p.nome = p.id;
+
     // Peça sem "grupo" cai em "Outros" (nunca quebra a montagem da página).
     p.grupo = p.grupo == null ? '' : String(p.grupo).trim();
     if (!p.grupo) p.grupo = 'Outros';
-    var preco = Number(p.preco);
-    p.preco = isNaN(preco) || preco < 0 ? 0 : preco;
+
+    // "valores" = { idDoServico: preço }. Mantém apenas números válidos.
+    var valores = {};
+    if (p.valores && typeof p.valores === 'object') {
+      Object.keys(p.valores).forEach(function (chave) {
+        var valor = Number(p.valores[chave]);
+        if (!isNaN(valor) && valor >= 0) valores[chave] = valor;
+      });
+    }
+
+    // Compatibilidade com configs antigos que usavam um único "preco".
+    if (!Object.keys(valores).length) {
+      var legado = Number(p.preco);
+      if (!isNaN(legado) && legado >= 0) {
+        valores[servicos.length ? servicos[0].id : 'preco'] = legado;
+      }
+    }
+
+    p.valores = valores;
   });
+
+  /** Serviço escolhido no simulador (id) ou null. */
+  var servicoEscolhido = null;
+
+  /** Quantidades do pedido: { idDaPeca: inteiro >= 0 }. */
+  var quantidades = {};
 
   /**
    * Agrupa as peças pelo campo "grupo", mantendo a ordem em que cada grupo
@@ -206,6 +244,93 @@
   }
 
   var gruposPrecos = agruparPorGrupo(precos);
+
+  /** Nome de um serviço pelo id (ou '' se não existir). */
+  function nomeServico(idServico) {
+    for (var i = 0; i < servicos.length; i++) {
+      if (servicos[i].id === idServico) return servicos[i].nome;
+    }
+    return '';
+  }
+
+  /**
+   * Preço de uma peça em um serviço específico.
+   * Devolve null quando o item não tem preço nesse serviço.
+   */
+  function precoDoItem(item, idServico) {
+    if (!item || !item.valores || idServico == null || idServico === '') {
+      return null;
+    }
+    if (!Object.prototype.hasOwnProperty.call(item.valores, idServico)) {
+      return null;
+    }
+    var valor = Number(item.valores[idServico]);
+    return isNaN(valor) ? null : valor;
+  }
+
+  /** Primeiro preço disponível da peça (usado quando não há serviços). */
+  function primeiroPrecoDoItem(item) {
+    if (!item || !item.valores) return null;
+    var chaves = Object.keys(item.valores);
+    if (!chaves.length) return null;
+    var valor = Number(item.valores[chaves[0]]);
+    return isNaN(valor) ? null : valor;
+  }
+
+  /**
+   * Preço que a peça deve exibir agora.
+   * Com serviços configurados, usa o serviço escolhido. Sem serviços
+   * (config ausente), usa o primeiro preço disponível de cada peça.
+   */
+  function precoAtualDoItem(item) {
+    var preco = precoDoItem(item, servicoEscolhido);
+    if (preco !== null) return preco;
+    if (!servicos.length) return primeiroPrecoDoItem(item);
+    return null;
+  }
+
+  /**
+   * Menor preço disponível de uma peça entre todos os serviços.
+   * Usado como critério de ordenação da tabela de preços.
+   */
+  function menorPrecoDoItem(item) {
+    var menor = Infinity;
+    if (!item || !item.valores) return menor;
+
+    Object.keys(item.valores).forEach(function (chave) {
+      var valor = Number(item.valores[chave]);
+      if (!isNaN(valor) && valor < menor) menor = valor;
+    });
+
+    return menor;
+  }
+
+  /**
+   * Ordena uma CÓPIA dos itens (o array original nunca é alterado):
+   * 1º) preço, do menor para o maior;
+   * 2º) em caso de empate, nome em português, ignorando acentos e
+   *     maiúsculas (localeCompare com sensitivity "base").
+   *
+   * "precoDe" devolve o preço a usar na comparação. Itens sem preço
+   * (null/undefined) vão para o fim.
+   */
+  function ordenarItens(itens, precoDe) {
+    return itens.slice().sort(function (a, b) {
+      var precoA = precoDe(a);
+      var precoB = precoDe(b);
+
+      if (precoA == null) precoA = Infinity;
+      if (precoB == null) precoB = Infinity;
+
+      if (precoA !== precoB) {
+        return precoA < precoB ? -1 : 1;
+      }
+
+      return String(a.nome).localeCompare(String(b.nome), 'pt-BR', {
+        sensitivity: 'base',
+      });
+    });
+  }
 
   var horarios = Array.isArray(cfg.horarios) ? cfg.horarios.filter(Boolean) : [];
   var diferenciais = Array.isArray(cfg.diferenciais)
@@ -410,30 +535,113 @@
   }
 
   /* ------------------------------------------------------------------ *
-   * 6. TABELA DE PREÇOS
+   * 6. TABELA DE PREÇOS E CARDS "NOSSOS SERVIÇOS"
    * ------------------------------------------------------------------ */
+  /**
+   * Cards "Nossos serviços" (acima da tabela).
+   * O bloco inteiro some quando CONFIG.servicos está vazio ou ausente.
+   */
+  function montarServicosPrecos() {
+    var bloco = document.getElementById('nossos-servicos');
+    var lista = document.getElementById('lista-servicos-precos');
+    var texto = document.getElementById('texto-servicos');
+    if (!lista) return;
+
+    lista.textContent = '';
+
+    if (!servicos.length) {
+      if (bloco) bloco.setAttribute('hidden', 'hidden');
+      return;
+    }
+    if (bloco) bloco.removeAttribute('hidden');
+
+    servicos.forEach(function (s) {
+      var li = elemento('li', 'servico-card');
+
+      li.appendChild(elemento('h4', 'servico-card__nome', s.nome));
+
+      var linhaPreco = elemento('p', 'servico-card__preco');
+      linhaPreco.appendChild(
+        elemento('span', 'servico-card__valor', formatarMoeda(s.preco))
+      );
+      linhaPreco.appendChild(
+        elemento('span', 'servico-card__por', 'por peça comum')
+      );
+      li.appendChild(linhaPreco);
+
+      li.appendChild(elemento('p', 'servico-card__descricao', s.descricao));
+
+      lista.appendChild(li);
+    });
+
+    if (texto) texto.textContent = cfg.textoServicos || '';
+  }
+
+  /** Colunas da tabela: uma por serviço (ou uma única, sem serviços). */
+  function colunasDaTabela() {
+    if (servicos.length) {
+      return servicos.map(function (s) {
+        return { id: s.id, nome: s.nome };
+      });
+    }
+    return [{ id: null, nome: 'Preço por peça' }];
+  }
+
   function montarTabelaPrecos() {
     var corpo = document.getElementById('tabela-precos');
+    var cabecalho = document.getElementById('tabela-precos-cabecalho');
     if (!corpo) return;
 
     corpo.textContent = '';
+    if (cabecalho) cabecalho.textContent = '';
+
+    var colunas = colunasDaTabela();
+
+    // Cabeçalho: "Peça" + uma coluna por serviço, na ordem do config.
+    if (cabecalho) {
+      var thPeca = elemento('th', null, 'Peça');
+      thPeca.setAttribute('scope', 'col');
+      cabecalho.appendChild(thPeca);
+
+      colunas.forEach(function (coluna) {
+        var th = elemento('th', 'tabela__valor', coluna.nome);
+        th.setAttribute('scope', 'col');
+        cabecalho.appendChild(th);
+      });
+    }
 
     gruposPrecos.forEach(function (grupo) {
       // Linha de título do grupo (só quando o grupo tem nome)
       if (grupo.nome) {
         var linhaGrupo = elemento('tr', 'tabela__grupo');
         var tituloGrupo = elemento('th', null, grupo.nome);
-        tituloGrupo.setAttribute('colspan', '2');
+        tituloGrupo.setAttribute('colspan', String(colunas.length + 1));
         tituloGrupo.setAttribute('scope', 'rowgroup');
         linhaGrupo.appendChild(tituloGrupo);
         corpo.appendChild(linhaGrupo);
       }
 
-      grupo.itens.forEach(function (p) {
+      // Cópia ordenada: menor preço do item entre os serviços; empate = nome.
+      // A ordem dos grupos (gruposPrecos) não é alterada.
+      ordenarItens(grupo.itens, menorPrecoDoItem).forEach(function (p) {
         var tr = elemento('tr');
-        tr.appendChild(elemento('th', null, p.nome));
-        tr.firstChild.setAttribute('scope', 'row');
-        tr.appendChild(elemento('td', null, formatarMoeda(p.preco)));
+        var th = elemento('th', null, p.nome);
+        th.setAttribute('scope', 'row');
+        tr.appendChild(th);
+
+        colunas.forEach(function (coluna) {
+          var preco = coluna.id
+            ? precoDoItem(p, coluna.id)
+            : primeiroPrecoDoItem(p);
+
+          var td = elemento(
+            'td',
+            'tabela__valor',
+            preco === null ? '—' : formatarMoeda(preco)
+          );
+          tr.appendChild(td);
+        });
+
         corpo.appendChild(tr);
       });
     });
@@ -531,11 +739,43 @@
   /* ------------------------------------------------------------------ *
    * 8. SIMULADOR DE SERVIÇO
    * ------------------------------------------------------------------ */
-  var quantidades = {}; // { idDaPeca: inteiro >= 0 }
-
   function quantidadeDe(id) {
     var q = quantidades[id];
     return typeof q === 'number' && isFinite(q) && q > 0 ? Math.floor(q) : 0;
+  }
+
+  /** Grupos exibidos no passo 2 para o serviço escolhido. */
+  var gruposVisiveis = [];
+
+  /**
+   * Grupos com apenas os itens que têm preço para o serviço atual,
+   * ordenados pelo preço do serviço escolhido e, em caso de empate,
+   * pelo nome (pt-BR, sem acentos/maiúsculas). Categorias sem nenhum
+   * item disponível ficam de fora (ocultas). A ordem dos grupos não muda.
+   */
+  function gruposDoServico() {
+    return gruposPrecos
+      .map(function (grupo) {
+        var itensDisponiveis = grupo.itens.filter(function (p) {
+          return precoAtualDoItem(p) !== null;
+        });
+
+        return {
+          nome: grupo.nome,
+          itens: ordenarItens(itensDisponiveis, precoAtualDoItem),
+        };
+      })
+      .filter(function (grupo) {
+        return grupo.itens.length > 0;
+      });
+  }
+
+  /** Esconde o aviso de itens removidos (some a cada nova alteração). */
+  function esconderAvisoItens() {
+    var aviso = document.getElementById('aviso-itens');
+    if (!aviso) return;
+    aviso.textContent = '';
+    aviso.hidden = true;
   }
 
   /** Recalcula tudo e atualiza o resumo na tela. */
@@ -546,14 +786,20 @@
     var totalValor = document.getElementById('resumo-total-valor');
     var botao = document.getElementById('btn-confirmar');
     var aviso = document.getElementById('aviso-pedido');
+    var rotuloServico = document.getElementById('resumo-servico');
 
     var somaPecas = 0;
     var somaCentavos = 0;
+
+    if (rotuloServico) {
+      rotuloServico.textContent = nomeServico(servicoEscolhido) || 'não escolhido';
+    }
 
     if (listaItens) listaItens.textContent = '';
 
     precos.forEach(function (p) {
       var qtd = quantidadeDe(p.id);
+      var preco = precoAtualDoItem(p);
 
       // Realça o cartão da peça que já tem quantidade.
       // Precisa vir ANTES do "return" para que o destaque também seja
@@ -561,9 +807,9 @@
       var cartao = document.querySelector('[data-item="' + p.id + '"]');
       if (cartao) cartao.classList.toggle('ativo', qtd > 0);
 
-      if (qtd <= 0) return;
+      if (preco === null || qtd <= 0) return;
 
-      var subtotalCentavos = paraCentavos(p.preco) * qtd;
+      var subtotalCentavos = paraCentavos(preco) * qtd;
       somaPecas += qtd;
       somaCentavos += subtotalCentavos;
 
@@ -588,13 +834,20 @@
     if (totalPecas) totalPecas.textContent = String(somaPecas);
     if (totalValor) totalValor.textContent = formatarMoeda(valorTotal);
 
-    var semPecas = somaPecas === 0;
-    if (botao) botao.disabled = semPecas;
+    // Só confirma com serviço escolhido E ao menos uma peça.
+    // Sem "servicos" no config, basta ter peças (não há passo 1).
+    var temServico = servicos.length ? servicoEscolhido !== null : true;
+    var podeConfirmar = temServico && somaPecas > 0;
+    if (botao) botao.disabled = !podeConfirmar;
 
     if (aviso) {
-      aviso.textContent = semPecas
-        ? 'Informe ao menos uma peça para continuar.'
-        : '';
+      if (podeConfirmar) {
+        aviso.textContent = '';
+      } else {
+        aviso.textContent = servicos.length
+          ? 'Escolha o serviço e informe ao menos uma peça.'
+          : 'Informe ao menos uma peça para continuar.';
+      }
     }
 
     // Nome do grupo + quantidade escolhida, e abre os grupos em uso.
@@ -605,17 +858,18 @@
 
   /** Cria o cartão de uma peça: nome, preço unitário e contador − | campo | +. */
   function criarItem(p) {
-    quantidades[p.id] = 0;
-
     var div = elemento('div', 'item');
     div.setAttribute('data-item', p.id);
 
-    /* --- nome e preço unitário --- */
+    /* --- nome e preço unitário (preço do serviço escolhido) --- */
     var info = elemento('div', 'item__info');
     info.appendChild(elemento('span', 'item__nome', p.nome));
 
     var preco = elemento('span', 'item__preco');
-    preco.appendChild(elemento('strong', null, formatarMoeda(p.preco)));
+    var valorAtual = precoAtualDoItem(p);
+    preco.appendChild(
+      elemento('strong', null, formatarMoeda(valorAtual === null ? 0 : valorAtual))
+    );
     preco.appendChild(document.createTextNode(' por peça'));
     info.appendChild(preco);
 
@@ -646,7 +900,7 @@
     input.type = 'number';
     input.id = idInput;
     input.name = idInput;
-    input.value = '0';
+    input.value = String(quantidadeDe(p.id));
     input.min = '0';
     input.step = '1';
     input.inputMode = 'numeric';
@@ -671,20 +925,141 @@
     return div;
   }
 
-  /** Monta os contadores, um bloco recolhível (<details>) por grupo. */
+  /** Monta o passo 1: um cartão com botão de rádio para cada serviço. */
+  function montarServicos() {
+    var bloco = document.getElementById('passo-servico');
+    var container = document.getElementById('lista-servicos');
+    if (!container) return;
+
+    container.textContent = '';
+
+    // Sem serviços configurados, o passo 1 nem aparece.
+    if (!servicos.length) {
+      if (bloco) bloco.hidden = true;
+      return;
+    }
+    if (bloco) bloco.hidden = false;
+
+    servicos.forEach(function (s) {
+      var idRadio = 'servico-' + s.id;
+
+      var label = elemento('label', 'servico-opcao');
+      label.setAttribute('for', idRadio);
+
+      var input = document.createElement('input');
+      input.type = 'radio';
+      input.className = 'servico-opcao__radio visualmente-oculto';
+      input.name = 'servico';
+      input.id = idRadio;
+      input.value = s.id;
+      input.checked = servicoEscolhido === s.id;
+      input.setAttribute('data-servico', s.id);
+
+      var corpo = elemento('span', 'servico-opcao__corpo');
+
+      // Indicador visual de rádio (o input nativo continua sendo o controle
+      // acessível; este círculo com o visto é apenas decoração).
+      var indicador = elemento('span', 'servico-opcao__indicador');
+      indicador.setAttribute('aria-hidden', 'true');
+      indicador.innerHTML =
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
+        'stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" ' +
+        'focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+      corpo.appendChild(indicador);
+
+      corpo.appendChild(elemento('span', 'servico-opcao__nome', s.nome));
+
+      var linhaPreco = elemento('span', 'servico-opcao__preco');
+      linhaPreco.appendChild(
+        elemento('strong', 'servico-opcao__valor', formatarMoeda(s.preco))
+      );
+      linhaPreco.appendChild(
+        elemento('span', 'servico-opcao__por', ' por peça comum')
+      );
+      corpo.appendChild(linhaPreco);
+
+      corpo.appendChild(
+        elemento('span', 'servico-opcao__descricao', s.descricao)
+      );
+
+      label.appendChild(input);
+      label.appendChild(corpo);
+      container.appendChild(label);
+    });
+
+    // Delegação: um único ouvinte para todos os cartões de serviço.
+    container.addEventListener('change', function (evento) {
+      var alvo = evento.target;
+      if (!alvo || alvo.name !== 'servico') return;
+      selecionarServico(alvo.value);
+    });
+  }
+
+  /**
+   * Troca o serviço escolhido. Itens que não têm preço no novo serviço saem
+   * do pedido (quantidade volta a 0) e um aviso discreto é exibido.
+   */
+  function selecionarServico(idServico) {
+    servicoEscolhido = idServico;
+
+    var removidos = false;
+    precos.forEach(function (p) {
+      if (quantidadeDe(p.id) > 0 && precoDoItem(p, idServico) === null) {
+        quantidades[p.id] = 0;
+        removidos = true;
+      }
+    });
+
+    var aviso = document.getElementById('aviso-itens');
+    if (aviso) {
+      if (removidos) {
+        aviso.textContent =
+          'Alguns itens não estão disponíveis em \'' +
+          (nomeServico(idServico) || idServico) +
+          '\' e foram removidos do pedido.';
+        aviso.hidden = false;
+      } else {
+        aviso.textContent = '';
+        aviso.hidden = true;
+      }
+    }
+
+    montarSimulador();
+    atualizarResumo();
+  }
+
+  /**
+   * Monta o passo 2: contadores das peças disponíveis no serviço escolhido,
+   * um bloco recolhível (<details>) por grupo.
+   */
   function montarSimulador() {
     var form = document.getElementById('lista-itens');
+    var dica = document.getElementById('pecas-vazio');
     if (!form) return;
 
-    form.textContent = '';
+    // Sem "servicos" no config, não há passo 1: mostra as peças direto,
+    // usando o primeiro preço disponível de cada item.
+    var temServicos = servicos.length > 0;
+    var servicoDefinido = !temServicos || servicoEscolhido !== null;
 
-    gruposPrecos.forEach(function (grupo, indice) {
+    if (dica) dica.hidden = servicoDefinido;
+    form.hidden = !servicoDefinido;
+
+    form.textContent = '';
+    gruposVisiveis = [];
+
+    // Enquanto nenhum serviço estiver escolhido, só a dica aparece.
+    if (!servicoDefinido) return;
+
+    gruposVisiveis = gruposDoServico();
+
+    gruposVisiveis.forEach(function (grupo, indice) {
       var bloco = document.createElement('details');
       bloco.className = 'grupo-itens';
       bloco.setAttribute('data-grupo', String(indice));
 
-      // Só o primeiro grupo começa aberto: a lista de 28 peças ficaria
-      // enorme no celular se todos abrissem de uma vez.
+      // Só o primeiro grupo começa aberto: a lista ficaria enorme no
+      // celular se todos abrissem de uma vez.
       if (indice === 0) bloco.open = true;
 
       var titulo = document.createElement('summary');
@@ -706,6 +1081,12 @@
       bloco.appendChild(lista);
       form.appendChild(bloco);
     });
+  }
+
+  /** Eventos do passo 2 (ligados uma única vez, por delegação). */
+  function ligarEventosSimulador() {
+    var form = document.getElementById('lista-itens');
+    if (!form) return;
 
     /* --- Enter no campo de quantidade NÃO deve recarregar a página ---
        O formulário não tem botão "enviar" (o botão de confirmação fica
@@ -732,7 +1113,8 @@
       var nova = acao === 'aumentar' ? atual + 1 : Math.max(0, atual - 1);
 
       quantidades[id] = nova;
-      campo.value = String(nova);
+      if (campo) campo.value = String(nova);
+      esconderAvisoItens();
       atualizarResumo();
     });
 
@@ -758,6 +1140,7 @@
         if (String(inteiro) !== bruto) campo.value = String(inteiro);
       }
 
+      esconderAvisoItens();
       atualizarResumo();
     });
 
@@ -770,6 +1153,7 @@
       var n = quantidadeDe(id);
       quantidades[id] = n;
       campo.value = String(n);
+      esconderAvisoItens();
       atualizarResumo();
     }, true);
 
@@ -796,6 +1180,7 @@
       var nova = quantidadeDe(id) + 1;
       quantidades[id] = nova;
       campo.value = String(nova);
+      esconderAvisoItens();
       atualizarResumo();
     }
 
@@ -804,6 +1189,7 @@
       var nova = Math.max(0, quantidadeDe(id) - 1);
       quantidades[id] = nova;
       campo.value = String(nova);
+      esconderAvisoItens();
       atualizarResumo();
     }
   }
@@ -815,8 +1201,8 @@
   function atualizarContagensDosGrupos() {
     var blocos = document.querySelectorAll('#lista-itens .grupo-itens');
 
-    for (var i = 0; i < blocos.length && i < gruposPrecos.length; i++) {
-      var grupo = gruposPrecos[i];
+    for (var i = 0; i < blocos.length && i < gruposVisiveis.length; i++) {
+      var grupo = gruposVisiveis[i];
       var soma = 0;
 
       for (var j = 0; j < grupo.itens.length; j++) {
@@ -849,18 +1235,25 @@
   function confirmarServico() {
     var resultado = atualizarResumo();
 
-    if (resultado.totalPecas === 0) return;
+    // Só envia com serviço escolhido (quando há serviços) e peças no pedido.
+    var temServico = servicos.length ? servicoEscolhido !== null : true;
+    if (!temServico || resultado.totalPecas === 0) return;
 
-    // Uma linha por peça com quantidade > 0. Os grupos são só organização
-    // da tela: a mensagem continua simples, sem os nomes dos grupos.
+    // Uma linha por peça com quantidade > 0, na MESMA ordem em que os itens
+    // aparecem no simulador (já ordenados por preço e nome). Os grupos são
+    // só organização da tela: a mensagem não mostra os nomes dos grupos.
     var linhas = [];
-    precos.forEach(function (p) {
-      var qtd = quantidadeDe(p.id);
-      if (qtd > 0) linhas.push('- ' + qtd + 'x ' + p.nome);
+    gruposVisiveis.forEach(function (grupo) {
+      grupo.itens.forEach(function (p) {
+        var qtd = quantidadeDe(p.id);
+        if (qtd > 0) linhas.push('- ' + qtd + 'x ' + p.nome);
+      });
     });
 
     var mensagem = [
       cfg.mensagemWhatsApp || '',
+      '',
+      'Serviço: ' + (nomeServico(servicoEscolhido) || 'não escolhido'),
       '',
       'Peças:',
       linhas.join('\n'),
@@ -961,15 +1354,28 @@
       });
     });
 
-    // "priceRange": intervalo curto do menor para o maior preço da tabela
-    // (ex.: "R$ 1,00 - R$ 70,00"). Montado a partir do config, sem valor fixo.
-    var precosOrdenados = precos
-      .map(function (p) {
-        return p.preco;
-      })
-      .sort(function (a, b) {
-        return a - b;
+    // "priceRange": intervalo curto do menor para o maior preço de todos os
+    // "valores" da tabela (ex.: "R$ 1,00 - R$ 70,00"). Montado a partir do
+    // config, sem valor fixo.
+    var valoresPrecos = [];
+    precos.forEach(function (p) {
+      var valores = p.valores || {};
+      Object.keys(valores).forEach(function (chave) {
+        var valor = Number(valores[chave]);
+        if (!isNaN(valor) && valor >= 0) valoresPrecos.push(valor);
       });
+    });
+
+    // Sem preços em "valores", usa o preço de referência dos serviços.
+    if (!valoresPrecos.length) {
+      servicos.forEach(function (s) {
+        if (typeof s.preco === 'number') valoresPrecos.push(s.preco);
+      });
+    }
+
+    var precosOrdenados = valoresPrecos.sort(function (a, b) {
+      return a - b;
+    });
 
     var intervaloPrecos = '';
     if (precosOrdenados.length === 1) {
@@ -1053,9 +1459,12 @@
     aplicarCreditoDesenvolvedor();
     aplicarAvisosAtendimento();
     montarSobre();
+    montarServicosPrecos();
     montarTabelaPrecos();
     montarTabelaHorarios();
+    montarServicos();
     montarSimulador();
+    ligarEventosSimulador();
     atualizarResumo();
     atualizarStatus();
     montarMenu();
