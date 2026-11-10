@@ -1,15 +1,19 @@
 # 🧺 Lavanderia Santo Antônio
 
 Landing page responsiva (mobile-first) da Lavanderia Santo Antônio.
-HTML, CSS e JavaScript puros — **sem framework, sem build, sem backend**.
-Basta abrir o `index.html` no navegador.
+HTML, CSS e JavaScript puros — **sem framework, sem backend e sem dependências
+npm**. O conteúdo principal do `index.html` é gerado automaticamente a partir do
+`js/config.js` por um script Node.js padrão, para a página também funcionar sem
+JavaScript. Basta abrir o `index.html` no navegador.
 
 ```
 projeto lavanderia/
-├── index.html              estrutura da página
+├── index.html              estrutura + conteúdo estático gerado
 ├── css/style.css           estilos e identidade visual
 ├── js/config.js            ⭐ TODOS OS DADOS EDITÁVEIS
 ├── js/app.js               lógica (preços, simulador, horários, WhatsApp)
+├── scripts/
+│   └── gerar-estatico.js   gera o HTML estático a partir do config.js
 └── assets/
     ├── logo.png            logomarca original (1,5 MB)
     ├── logo-otimizada.png  versão leve usada no site (600 px, ~200 KB)
@@ -21,12 +25,14 @@ projeto lavanderia/
 ## ✏️ Como editar
 
 **Tudo o que é conteúdo fica em um único arquivo: [`js/config.js`](js/config.js).**
-Preço, horário, endereço, telefone, slogan… altere lá, salve e atualize o navegador.
-Não é preciso mexer em `index.html` nem em `css/style.css`.
+Preço, horário, endereço, telefone, slogan… altere lá, salve, rode
+`node scripts/gerar-estatico.js` e atualize o navegador.
+Não é preciso editar o conteúdo do `index.html` nem o `css/style.css` à mão.
 
 | Campo | Para que serve |
 | --- | --- |
 | `nome` | Nome exibido no topo, no rodapé e no título da aba |
+| `urlSite` | Endereço final do site, com `https://` e barra no fim. Usado no `canonical`, no `og:url` e na imagem de compartilhamento. |
 | `logo` | Caminho da logomarca (`assets/logo-otimizada.png`) |
 | `slogan` | Frase curta do topo da página (hero) |
 | `descricaoSite` | Descrição do site: `<meta description>` e `og:description` |
@@ -48,6 +54,37 @@ Não é preciso mexer em `index.html` nem em `css/style.css`.
 | `mensagemWhatsAppFinal` | Frase final da mensagem |
 | `desenvolvedor` | Crédito no rodapé: `nome` (vazio = não aparece) e `link` opcional do desenvolvedor |
 
+### Depois de editar o `config.js` (importante!)
+
+Sempre que alterar qualquer dado em `js/config.js`:
+
+1. Rode o gerador do HTML estático:
+
+   ```bash
+   node scripts/gerar-estatico.js
+   ```
+
+2. Teste a página localmente.
+3. Publique.
+
+O gerador lê o `config.js` sem alterá-lo e reescreve apenas o conteúdo que fica
+entre os marcadores `<!--ESTATICO:nome-->` e `<!--/ESTATICO:nome-->` no
+`index.html`. Tudo o que está fora dos marcadores continua intacto.
+
+Para conferir se o `index.html` está atualizado, sem gravar nada:
+
+```bash
+node scripts/gerar-estatico.js --verificar
+```
+
+- Se estiver tudo certo, o comando termina com código `0`.
+- Se o `config.js` tiver mudado e o HTML ainda não tiver sido gerado, ele avisa
+  que o arquivo está desatualizado e termina com código diferente de zero.
+- Se o config estiver inválido ou faltar algum marcador, ele mostra uma mensagem
+  clara em português e não grava o arquivo.
+
+O script usa apenas o Node.js padrão: não é preciso instalar nada.
+
 ### Antes de publicar (importante!)
 
 Checklist final:
@@ -58,9 +95,12 @@ Checklist final:
 4. **Endereço e mapa** — conferir em `endereco`, `linkMapa` e `linkRota`.
 5. **Instagram** — conferir em `instagram`.
 6. **Aviso de atendimento** — conferir em `avisoAtendimento`.
-7. **SEO** — `canonical`, `og:url` e `og:image` já apontam para
-   `https://lavanderiasantoantonio.vercel.app/`. Se o endereço mudar
-   (domínio próprio, por exemplo), atualize os três no `index.html`.
+7. **SEO** — o `canonical`, o `og:url` e o `og:image` saem de `urlSite`.
+   Se o endereço mudar (domínio próprio, por exemplo), atualize `urlSite` no
+   `config.js` e rode `node scripts/gerar-estatico.js`.
+8. **HTML estático** — depois de qualquer alteração no config, rode
+   `node scripts/gerar-estatico.js` e confira com `--verificar` antes de
+   testar e publicar.
 
 ### Exemplos
 
@@ -175,9 +215,9 @@ Para publicar manualmente pela primeira vez:
 O arquivo [`vercel.json`](vercel.json) já define `cleanUrls`, remove a barra
 final das URLs e adiciona cabeçalhos de segurança.
 
-Para atualizar o site, basta "commitar" e enviar para o GitHub — a Vercel
-publica sozinha. Também dá para arrastar a pasta do projeto em
-[vercel.com/new](https://vercel.com/new).
+Para atualizar o site, rode `node scripts/gerar-estatico.js`, teste localmente,
+"commite" e envie para o GitHub — a Vercel publica sozinha. Também dá para
+arrastar a pasta do projeto em [vercel.com/new](https://vercel.com/new).
 
 ### Opção 2 — GitHub Pages
 
@@ -185,16 +225,18 @@ publica sozinha. Também dá para arrastar a pasta do projeto em
 2. Suba os arquivos (`index.html`, `css/`, `js/`, `assets/`) para o repositório.
 3. O GitHub Pages gratuito exige repositório público.
 4. Em 1–2 minutos o site fica no ar em `https://seu-usuario.github.io/nome-do-repo/`.
-   Se for usar esse endereço, atualize `canonical`, `og:url` e `og:image` no
-   `index.html`.
+   Se for usar esse endereço, atualize `urlSite` no `config.js` e rode
+   `node scripts/gerar-estatico.js` para atualizar `canonical`, `og:url` e
+   `og:image`.
 
 ### Opção 3 — Netlify (arrastar e soltar)
 
 1. Acesse [app.netlify.com/drop](https://app.netlify.com/drop).
-2. **Arraste a pasta inteira** do projeto para a página.
-3. Pronto: o site já está publicado com endereço do tipo `https://aleatorio-1234.netlify.app`.
+2. Rode `node scripts/gerar-estatico.js` antes de arrastar a pasta.
+3. **Arraste a pasta inteira** do projeto para a página.
+4. Pronto: o site já está publicado com endereço do tipo `https://aleatorio-1234.netlify.app`.
 
-Para atualizar, arraste a pasta de novo. Para usar seu próprio domínio:
+Para atualizar, rode o gerador e arraste a pasta de novo. Para usar seu próprio domínio:
 **Site settings → Domain management → Add a domain**.
 
 ---
@@ -239,7 +281,8 @@ visitantes únicos e visualizações de página sem usar cookies.
 - Respeita `prefers-reduced-motion` e cores com bom contraste.
 - Ícones em SVG inline (sem biblioteca externa), imagens leves e `loading="lazy"` no mapa e no rodapé.
 - Fonte Nunito via Google Fonts, com fallback do sistema caso esteja offline.
-- Dados estruturados **JSON-LD** (`LaundryOrDryCleaner`) gerados a partir do `config.js` — bom para o Google.
+- Conteúdo principal no HTML (nome, endereço, telefone, horários, preços e serviços), gerado a partir do `config.js` — funciona para Google, prévias de link e visitantes sem JavaScript.
+- Dados estruturados **JSON-LD** (`LaundryOrDryCleaner`) gerados estaticamente a partir do `config.js` e atualizados pelo `app.js` quando o JavaScript está ligado.
 
 ## 🖼️ Sobre a logomarca
 

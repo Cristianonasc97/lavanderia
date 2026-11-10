@@ -673,7 +673,7 @@ a {
 }
 
 /* ------------------------- 10. SIMULADOR ----------------------------- */
-/* No celular o botão "Confirmar Serviço" fica logo acima do fim da seção,
+/* No celular o botão "Confirmar Orçamento" fica logo acima do fim da seção,
    onde o botão flutuante do WhatsApp flutua. Esta folga extra evita que
    um fique por cima do outro. Vale só abaixo de 720px (ver media query). */
 #simulador {
@@ -1393,8 +1393,10 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 0;
+  flex: 0 0 60px;
   width: 60px;
   height: 60px;
+  aspect-ratio: 1 / 1;
   padding: 0;
   overflow: hidden;
   color: var(--branco);
@@ -1402,7 +1404,7 @@ a {
   border: 3px solid var(--branco);
   border-radius: 50%;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
-  transition: transform 0.15s ease, gap 0.2s ease, padding 0.2s ease;
+  transition: transform 0.15s ease;
 }
 
 .whatsapp-flutuante svg {
@@ -1413,26 +1415,25 @@ a {
 }
 
 .whatsapp-flutuante__texto {
-  max-width: 0;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
   white-space: nowrap;
-  font-size: 0.95rem;
-  font-weight: 800;
-  opacity: 0;
-  transition: max-width 0.25s ease, opacity 0.2s ease;
+  border: 0;
 }
 
 .whatsapp-flutuante:hover,
 .whatsapp-flutuante:focus-visible {
   transform: translateY(-3px);
-  gap: 8px;
-  padding: 0 18px 0 12px;
-  width: auto;
 }
 
-.whatsapp-flutuante:hover .whatsapp-flutuante__texto,
-.whatsapp-flutuante:focus-visible .whatsapp-flutuante__texto {
-  max-width: 220px;
-  opacity: 1;
+.whatsapp-flutuante:focus-visible {
+  outline: 3px solid var(--ciano);
+  outline-offset: 3px;
 }
 
 /* ==========================================================================

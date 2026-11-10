@@ -23,6 +23,10 @@ const CONFIG = {
      ---------------------------------------------------------------------- */
   nome: 'Lavanderia Santo Antônio',
 
+  // Endereço final do site, com https:// e barra no fim.
+  // Usado no canonical, no og:url e na imagem de compartilhamento.
+  urlSite: 'https://lavanderiasantoantonio.vercel.app/',
+
   // Caminho da logomarca usada na página. Use sempre a versão otimizada.
   logo: 'assets/logo-otimizada.png',
 
@@ -272,12 +276,12 @@ const CONFIG = {
   /* ----------------------------------------------------------------------
      MENSAGEM DO WHATSAPP
      ----------------------------------------------------------------------
-     A mensagem enviada ao clicar em "Confirmar Serviço" é montada assim:
+     A mensagem enviada ao clicar em "Confirmar Orçamento" é montada assim:
        1. "mensagemWhatsApp"          (texto de abertura)
        2. A lista "Peças:"            (montada a partir do simulador)
        3. O total de peças e o valor estimado
        4. "mensagemWhatsAppFinal"     (pedido de atendimento)
      ---------------------------------------------------------------------- */
-  mensagemWhatsApp: 'Olá! Gostaria de solicitar um serviço de lavanderia.',
+  mensagemWhatsApp: 'Olá! Gostaria de solicitar um orçamento de lavanderia.',
   mensagemWhatsAppFinal: 'Poderiam me atender, por favor?',
 };

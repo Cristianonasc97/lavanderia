@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    <!--ESTATICO:seo-->
     <title>Lavanderia Santo Antônio | Lavanderia</title>
     <meta
       name="description"
@@ -21,8 +22,6 @@
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content="Lavanderia Santo Antônio" />
     <meta property="og:title" content="Lavanderia Santo Antônio" />
-    <!-- O title e a description abaixo são preenchidos pelo js/app.js
-         a partir de CONFIG.nome e CONFIG.descricaoSite. -->
     <meta
       property="og:description"
       content="Lavanderia Santo Antônio: lavagem de roupas. Confira a tabela de preços, simule seu pedido e finalize pelo WhatsApp."
@@ -40,6 +39,72 @@
     <meta property="og:image:width" content="600" />
     <meta property="og:image:height" content="600" />
     <meta property="og:image:alt" content="Logomarca Lavanderia Santo Antônio" />
+    <!--/ESTATICO:seo-->
+
+    <!--ESTATICO:json-ld-->
+    <script type="application/ld+json" id="dados-estruturados">
+    {
+      "@context": "https://schema.org",
+      "@type": "LaundryOrDryCleaner",
+      "name": "Lavanderia Santo Antônio",
+      "description": "Cuidamos da lavagem das suas roupas com atenção a cada detalhe. Usamos produtos próprios para roupa e tratamos cada peça individualmente, preservando as cores, os tecidos e o brilho de cada roupa.",
+      "image": "https://lavanderiasantoantonio.vercel.app/assets/logo-otimizada.png",
+      "telephone": "+5584988067964",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Av. Maria Amélia Machado, 55",
+        "addressLocality": "Parnamirim",
+        "addressCountry": "BR",
+        "addressRegion": "RN"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "https://schema.org/Monday",
+          "opens": "07:30",
+          "closes": "18:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "https://schema.org/Tuesday",
+          "opens": "07:30",
+          "closes": "18:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "https://schema.org/Wednesday",
+          "opens": "07:30",
+          "closes": "18:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "https://schema.org/Thursday",
+          "opens": "07:30",
+          "closes": "18:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "https://schema.org/Friday",
+          "opens": "07:30",
+          "closes": "18:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "https://schema.org/Saturday",
+          "opens": "07:30",
+          "closes": "13:00"
+        }
+      ],
+      "priceRange": "R$ 1,00 - R$ 70,00",
+      "currenciesAccepted": "BRL",
+      "hasMap": "https://www.google.com/maps?q=Av.+Maria+Am%C3%A9lia+Machado,+55,+Ema%C3%BAs,+Parnamirim,+RN\u0026output=embed",
+      "sameAs": [
+        "https://www.instagram.com/lavanderia_santoantonio/"
+      ],
+      "url": "https://lavanderiasantoantonio.vercel.app/"
+    }
+    </script>
+    <!--/ESTATICO:json-ld-->
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="assets/favicon.png" />
@@ -125,6 +190,7 @@
     <header class="cabecalho" id="cabecalho">
       <div class="container cabecalho__conteudo">
         <a class="marca" href="#inicio">
+          <!--ESTATICO:logo-topo-->
           <img
             id="logo-topo"
             class="marca__logo"
@@ -133,7 +199,8 @@
             width="48"
             height="48"
           />
-          <span class="marca__nome" data-campo="nome">Lavanderia Santo Antônio</span>
+          <!--/ESTATICO:logo-topo-->
+          <span class="marca__nome" data-campo="nome"><!--ESTATICO:nome-topo-->Lavanderia Santo Antônio<!--/ESTATICO:nome-topo--></span>
         </a>
 
         <nav class="menu" id="menu" aria-label="Menu principal">
@@ -143,9 +210,16 @@
             <li><a class="menu__link" href="#horarios">Horários</a></li>
             <li><a class="menu__link" href="#localizacao">Localização</a></li>
           </ul>
-          <a class="botao botao--rosa botao--bloco menu__acao" href="#simulador"
-            >Solicitar Serviço</a
+          <!--ESTATICO:cta-menu-->
+          <a
+            class="botao botao--rosa botao--bloco menu__acao"
+            href="https://wa.me/5584988067964?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Lavanderia%20Santo%20Ant%C3%B4nio.%20Gostaria%20de%20mais%20informa%C3%A7%C3%B5es."
+            target="_blank"
+            rel="noopener"
+            data-cta-simulador
+            >Solicitar Orçamento</a
           >
+          <!--/ESTATICO:cta-menu-->
         </nav>
 
         <button
@@ -166,6 +240,7 @@
     <main id="conteudo">
       <!-- =========================== 2. HERO =========================== -->
       <section class="hero" id="inicio">
+        <!--ESTATICO:logo-hero-->
         <img
           class="hero__logo"
           src="assets/logo-otimizada.png"
@@ -173,20 +248,46 @@
           width="600"
           height="600"
         />
-        <h1 class="hero__titulo" data-campo="nome">Lavanderia Santo Antônio</h1>
-        <!-- O slogan vem de CONFIG.slogan e é preenchido pelo js/app.js -->
-        <p class="hero__slogan" data-campo="slogan"></p>
-        <a class="botao botao--rosa botao--grande" href="#simulador"
-          >Solicitar Serviço</a
+        <!--/ESTATICO:logo-hero-->
+        <h1 class="hero__titulo" data-campo="nome"><!--ESTATICO:nome-hero-->Lavanderia Santo Antônio<!--/ESTATICO:nome-hero--></h1>
+        <p class="hero__slogan" data-campo="slogan"><!--ESTATICO:slogan-->Suas roupas limpas e bem cuidadas<!--/ESTATICO:slogan--></p>
+        <!--ESTATICO:cta-hero-->
+        <a
+          class="botao botao--rosa botao--grande"
+          href="https://wa.me/5584988067964?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Lavanderia%20Santo%20Ant%C3%B4nio.%20Gostaria%20de%20mais%20informa%C3%A7%C3%B5es."
+          target="_blank"
+          rel="noopener"
+          data-cta-simulador
+          >Solicitar Orçamento</a
         >
+        <!--/ESTATICO:cta-hero-->
       </section>
 
       <!-- ==================== 3. SOBRE A LAVANDERIA ==================== -->
       <section class="secao secao--clara" id="sobre" aria-labelledby="sobre-titulo">
         <div class="container">
           <h2 class="secao__titulo" id="sobre-titulo">Sobre a lavanderia</h2>
-          <p class="sobre__texto" id="sobre-texto"></p>
-          <ul class="diferenciais" id="diferenciais"></ul>
+          <p class="sobre__texto" id="sobre-texto"><!--ESTATICO:sobre-texto-->Cuidamos da lavagem das suas roupas com atenção a cada detalhe. Usamos produtos próprios para roupa e tratamos cada peça individualmente, preservando as cores, os tecidos e o brilho de cada roupa.<!--/ESTATICO:sobre-texto--></p>
+          <ul class="diferenciais" id="diferenciais">
+            <!--ESTATICO:diferenciais-->
+            <li class="diferencial">
+              <h3 class="diferencial__titulo">Cuidado com as peças</h3>
+              <p class="diferencial__texto">Cada peça recebe atenção individual durante a lavagem.</p>
+            </li>
+            <li class="diferencial">
+              <h3 class="diferencial__titulo">Produtos de qualidade</h3>
+              <p class="diferencial__texto">Produtos profissionais que preservam as fibras e as cores.</p>
+            </li>
+            <li class="diferencial">
+              <h3 class="diferencial__titulo">Roupas limpas e cheirosas</h3>
+              <p class="diferencial__texto">Lavagem caprichada, que deixa suas roupas limpas e cheirosas.</p>
+            </li>
+            <li class="diferencial">
+              <h3 class="diferencial__titulo">Cuidado com as cores</h3>
+              <p class="diferencial__texto">Procuramos preservar a tonalidade e o brilho das suas roupas.</p>
+            </li>
+            <!--/ESTATICO:diferenciais-->
+          </ul>
         </div>
       </section>
 
@@ -194,17 +295,26 @@
       <section class="secao" id="precos" aria-labelledby="precos-titulo">
         <div class="container">
           <h2 class="secao__titulo" id="precos-titulo">Tabela de preços</h2>
-          <!-- O texto abaixo vem de CONFIG.textoPrecos (js/app.js) -->
-          <p class="secao__descricao" id="texto-precos"></p>
+          <p class="secao__descricao" id="texto-precos"><!--ESTATICO:texto-precos-->Valores por peça, organizados por categoria.<!--/ESTATICO:texto-precos--></p>
 
-          <!-- Nossos serviços: cards montados por js/app.js a partir de
-               CONFIG.servicos. O bloco fica oculto quando não há serviços. -->
-          <div class="servicos" id="nossos-servicos" hidden>
+          <!--ESTATICO:nossos-servicos-->
+          <div class="servicos" id="nossos-servicos">
             <h3 class="servicos__titulo">Nossos serviços</h3>
-            <ul class="servicos__lista" id="lista-servicos-precos"></ul>
-            <!-- Texto pequeno vindo de CONFIG.textoServicos -->
-            <p class="servicos__texto" id="texto-servicos"></p>
+            <ul class="servicos__lista" id="lista-servicos-precos">
+              <li class="servico-card">
+                <h4 class="servico-card__nome">Apenas passar</h4>
+                <p class="servico-card__preco"><span class="servico-card__valor">R$ 1,00</span><span class="servico-card__por">por peça comum</span></p>
+                <p class="servico-card__descricao">Passamos as suas peças.</p>
+              </li>
+              <li class="servico-card">
+                <h4 class="servico-card__nome">Lavar e passar</h4>
+                <p class="servico-card__preco"><span class="servico-card__valor">R$ 1,50</span><span class="servico-card__por">por peça comum</span></p>
+                <p class="servico-card__descricao">Lavamos e passamos as suas peças.</p>
+              </li>
+            </ul>
+            <p class="servicos__texto" id="texto-servicos">Valores por peça comum: camiseta, calça, bermuda, vestido, meia, lençol fino, fronha, saia, sutiã e toalha. Os demais itens têm preço próprio, na tabela abaixo.</p>
           </div>
+          <!--/ESTATICO:nossos-servicos-->
 
           <h3 class="tabela__subtitulo">Preço por peça</h3>
 
@@ -214,28 +324,195 @@
                 Tabela de preços por peça
               </caption>
               <thead>
-                <!-- O cabeçalho é montado por js/app.js: uma coluna por serviço -->
-                <tr id="tabela-precos-cabecalho"></tr>
+                <tr id="tabela-precos-cabecalho">
+                  <!--ESTATICO:tabela-cabecalho-->
+                  <th scope="col">Peça</th>
+                  <th class="tabela__valor" scope="col">Apenas passar</th>
+                  <th class="tabela__valor" scope="col">Lavar e passar</th>
+                  <!--/ESTATICO:tabela-cabecalho-->
+                </tr>
               </thead>
-              <tbody id="tabela-precos"></tbody>
+              <tbody id="tabela-precos">
+                <!--ESTATICO:tabela-precos-->
+                <tr class="tabela__grupo">
+                  <th colspan="3" scope="rowgroup">Peças comuns</th>
+                </tr>
+                <tr>
+                  <th scope="row">Bermuda</th>
+                  <td class="tabela__valor">R$ 1,00</td>
+                  <td class="tabela__valor">R$ 1,50</td>
+                </tr>
+                <tr>
+                  <th scope="row">Calça</th>
+                  <td class="tabela__valor">R$ 1,00</td>
+                  <td class="tabela__valor">R$ 1,50</td>
+                </tr>
+                <tr>
+                  <th scope="row">Camiseta</th>
+                  <td class="tabela__valor">R$ 1,00</td>
+                  <td class="tabela__valor">R$ 1,50</td>
+                </tr>
+                <tr>
+                  <th scope="row">Fronha</th>
+                  <td class="tabela__valor">R$ 1,00</td>
+                  <td class="tabela__valor">R$ 1,50</td>
+                </tr>
+                <tr>
+                  <th scope="row">Lençol fino</th>
+                  <td class="tabela__valor">R$ 1,00</td>
+                  <td class="tabela__valor">R$ 1,50</td>
+                </tr>
+                <tr>
+                  <th scope="row">Meia</th>
+                  <td class="tabela__valor">R$ 1,00</td>
+                  <td class="tabela__valor">R$ 1,50</td>
+                </tr>
+                <tr>
+                  <th scope="row">Saia</th>
+                  <td class="tabela__valor">R$ 1,00</td>
+                  <td class="tabela__valor">R$ 1,50</td>
+                </tr>
+                <tr>
+                  <th scope="row">Sutiã</th>
+                  <td class="tabela__valor">R$ 1,00</td>
+                  <td class="tabela__valor">R$ 1,50</td>
+                </tr>
+                <tr>
+                  <th scope="row">Toalha</th>
+                  <td class="tabela__valor">R$ 1,00</td>
+                  <td class="tabela__valor">R$ 1,50</td>
+                </tr>
+                <tr>
+                  <th scope="row">Vestido</th>
+                  <td class="tabela__valor">R$ 1,00</td>
+                  <td class="tabela__valor">R$ 1,50</td>
+                </tr>
+                <tr class="tabela__grupo">
+                  <th colspan="3" scope="rowgroup">Outras roupas</th>
+                </tr>
+                <tr>
+                  <th scope="row">Calcinha</th>
+                  <td class="tabela__valor">—</td>
+                  <td class="tabela__valor">R$ 2,00</td>
+                </tr>
+                <tr>
+                  <th scope="row">Camisa social</th>
+                  <td class="tabela__valor">—</td>
+                  <td class="tabela__valor">R$ 2,00</td>
+                </tr>
+                <tr>
+                  <th scope="row">Cueca</th>
+                  <td class="tabela__valor">—</td>
+                  <td class="tabela__valor">R$ 2,00</td>
+                </tr>
+                <tr>
+                  <th scope="row">Casaco</th>
+                  <td class="tabela__valor">—</td>
+                  <td class="tabela__valor">R$ 3,00</td>
+                </tr>
+                <tr>
+                  <th scope="row">Paletó completo</th>
+                  <td class="tabela__valor">—</td>
+                  <td class="tabela__valor">R$ 20,00</td>
+                </tr>
+                <tr class="tabela__grupo">
+                  <th colspan="3" scope="rowgroup">Casa e cama</th>
+                </tr>
+                <tr>
+                  <th scope="row">Coberta</th>
+                  <td class="tabela__valor">—</td>
+                  <td class="tabela__valor">R$ 10,00</td>
+                </tr>
+                <tr>
+                  <th scope="row">Edredom de solteiro</th>
+                  <td class="tabela__valor">—</td>
+                  <td class="tabela__valor">R$ 10,00</td>
+                </tr>
+                <tr>
+                  <th scope="row">Rede pequena</th>
+                  <td class="tabela__valor">—</td>
+                  <td class="tabela__valor">R$ 15,00</td>
+                </tr>
+                <tr>
+                  <th scope="row">Edredom de casal</th>
+                  <td class="tabela__valor">—</td>
+                  <td class="tabela__valor">R$ 20,00</td>
+                </tr>
+                <tr>
+                  <th scope="row">Rede grande</th>
+                  <td class="tabela__valor">—</td>
+                  <td class="tabela__valor">R$ 20,00</td>
+                </tr>
+                <tr>
+                  <th scope="row">Cortina de quarto (pequena)</th>
+                  <td class="tabela__valor">—</td>
+                  <td class="tabela__valor">R$ 30,00</td>
+                </tr>
+                <tr>
+                  <th scope="row">Cortina de sala (grande)</th>
+                  <td class="tabela__valor">—</td>
+                  <td class="tabela__valor">R$ 70,00</td>
+                </tr>
+                <tr class="tabela__grupo">
+                  <th colspan="3" scope="rowgroup">Calçados e conforto</th>
+                </tr>
+                <tr>
+                  <th scope="row">Almofada pequena</th>
+                  <td class="tabela__valor">—</td>
+                  <td class="tabela__valor">R$ 5,00</td>
+                </tr>
+                <tr>
+                  <th scope="row">Urso de pelúcia</th>
+                  <td class="tabela__valor">—</td>
+                  <td class="tabela__valor">R$ 5,00</td>
+                </tr>
+                <tr>
+                  <th scope="row">Almofada grande</th>
+                  <td class="tabela__valor">—</td>
+                  <td class="tabela__valor">R$ 15,00</td>
+                </tr>
+                <tr>
+                  <th scope="row">Tênis</th>
+                  <td class="tabela__valor">—</td>
+                  <td class="tabela__valor">R$ 15,00</td>
+                </tr>
+                <tr>
+                  <th scope="row">Travesseiro</th>
+                  <td class="tabela__valor">—</td>
+                  <td class="tabela__valor">R$ 15,00</td>
+                </tr>
+                <!--/ESTATICO:tabela-precos-->
+              </tbody>
             </table>
           </div>
-            <!-- Aviso opcional: preenchido por js/app.js a partir de CONFIG.avisoAtendimento -->
-            <div class="aviso" id="aviso-atendimento-precos" data-aviso-atendimento hidden></div>
+            <!--ESTATICO:aviso-precos-->
+            <div class="aviso" id="aviso-atendimento-precos" data-aviso-atendimento>Atendimento na lavanderia: não realizamos busca e entrega. Traga suas peças até nós.</div>
+            <!--/ESTATICO:aviso-precos-->
         </div>
       </section>
 
-      <!-- ==================== 5. SIMULADOR DE SERVIÇO ==================== -->
+      <!-- ==================== 5. SIMULADOR DE ORÇAMENTO ================== -->
       <section
         class="secao secao--clara"
         id="simulador"
         aria-labelledby="simulador-titulo"
       >
         <div class="container">
-          <h2 class="secao__titulo" id="simulador-titulo">Simulador de serviço</h2>
+          <h2 class="secao__titulo" id="simulador-titulo">Simulador de orçamento</h2>
           <p class="secao__descricao">
             Escolha o serviço, informe a quantidade de peças e veja o valor estimado na hora.
           </p>
+
+          <!--ESTATICO:noscript-->
+          <noscript>
+            <p class="simulador__dica">
+              Para usar o simulador, ative o JavaScript ou fale com a gente pelo WhatsApp.
+              <a href="https://wa.me/5584988067964?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Lavanderia%20Santo%20Ant%C3%B4nio.%20Gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener"
+                >Falar no WhatsApp</a
+              >
+            </p>
+          </noscript>
+          <!--/ESTATICO:noscript-->
 
           <div class="simulador">
             <div class="simulador__coluna">
@@ -294,9 +571,11 @@
                 type="button"
                 disabled
               >
-                Confirmar Serviço
+                Confirmar Orçamento
               </button>
-              <div class="aviso" id="aviso-atendimento-simulador" data-aviso-atendimento hidden></div>
+              <!--ESTATICO:aviso-simulador-->
+              <div class="aviso" id="aviso-atendimento-simulador" data-aviso-atendimento>Atendimento na lavanderia: não realizamos busca e entrega. Traga suas peças até nós.</div>
+              <!--/ESTATICO:aviso-simulador-->
               <p class="resumo__aviso" id="aviso-pedido" role="status">
                 Escolha o serviço e informe ao menos uma peça.
               </p>
@@ -324,7 +603,22 @@
                   <th scope="col">Horário</th>
                 </tr>
               </thead>
-              <tbody id="tabela-horarios"></tbody>
+              <tbody id="tabela-horarios">
+                <!--ESTATICO:tabela-horarios-->
+                <tr>
+                  <th scope="row" style="text-align: left">Segunda a Sexta</th>
+                  <td>07:30 às 18:00</td>
+                </tr>
+                <tr>
+                  <th scope="row" style="text-align: left">Sábado</th>
+                  <td>07:30 às 13:00</td>
+                </tr>
+                <tr>
+                  <th scope="row" style="text-align: left">Domingo</th>
+                  <td class="linha-fechada">Fechado</td>
+                </tr>
+                <!--/ESTATICO:tabela-horarios-->
+              </tbody>
             </table>
           </div>
         </div>
@@ -338,31 +632,36 @@
       >
         <div class="container">
           <h2 class="secao__titulo" id="localizacao-titulo">Onde estamos</h2>
-          <address class="localizacao__endereco" id="endereco"></address>
-          <!-- Referência (CONFIG.referencia): ponto de referência opcional.
-               O bloco some sozinho se o campo estiver vazio. -->
-          <p class="referencia" id="referencia-local" hidden>
+          <address class="localizacao__endereco" id="endereco"><!--ESTATICO:endereco-->Av. Maria Amélia Machado, 55 - Emaús, Parnamirim - RN<!--/ESTATICO:endereco--></address>
+          <!--ESTATICO:referencia-local-->
+          <p class="referencia" id="referencia-local">
             <span class="referencia__rotulo">Referência:</span>
-            <span id="referencia-texto"></span>
+            <span id="referencia-texto">Ao lado da Igreja Universal</span>
           </p>
+          <!--/ESTATICO:referencia-local-->
           <div class="mapa-envolucro">
+            <!--ESTATICO:mapa-->
             <iframe
               id="mapa"
               class="mapa"
               title="Mapa da localização da Lavanderia Santo Antônio"
+              src="https://www.google.com/maps?q=Av.+Maria+Am%C3%A9lia+Machado,+55,+Ema%C3%BAs,+Parnamirim,+RN&amp;output=embed"
               loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"
               allowfullscreen
             ></iframe>
+            <!--/ESTATICO:mapa-->
           </div>
+          <!--ESTATICO:btn-rota-->
           <a
             class="botao botao--marinho"
             id="btn-rota"
-            href="#"
+            href="https://www.google.com/maps/dir/?api=1&amp;destination=Av.+Maria+Am%C3%A9lia+Machado,+55,+Ema%C3%BAs,+Parnamirim,+RN"
             target="_blank"
             rel="noopener"
             >Como chegar</a
           >
+          <!--/ESTATICO:btn-rota-->
         </div>
       </section>
     </main>
@@ -370,6 +669,7 @@
     <!-- ========================== 8. RODAPÉ ========================== -->
     <footer class="rodape">
       <div class="container rodape__conteudo">
+        <!--ESTATICO:logo-rodape-->
         <img
           class="rodape__logo"
           src="assets/logo-otimizada.png"
@@ -378,25 +678,30 @@
           height="72"
           loading="lazy"
         />
-        <p class="rodape__nome" data-campo="nome">Lavanderia Santo Antônio</p>
-        <p class="rodape__endereco" id="rodape-endereco"></p>
-        <p class="rodape__referencia" id="rodape-referencia" hidden>
+        <!--/ESTATICO:logo-rodape-->
+        <p class="rodape__nome" data-campo="nome"><!--ESTATICO:nome-rodape-->Lavanderia Santo Antônio<!--/ESTATICO:nome-rodape--></p>
+        <p class="rodape__endereco" id="rodape-endereco"><!--ESTATICO:rodape-endereco-->Av. Maria Amélia Machado, 55 - Emaús, Parnamirim - RN<!--/ESTATICO:rodape-endereco--></p>
+        <!--ESTATICO:rodape-referencia-->
+        <p class="rodape__referencia" id="rodape-referencia">
           <span class="referencia__rotulo">Referência:</span>
-          <span id="rodape-referencia-texto"></span>
+          <span id="rodape-referencia-texto">Ao lado da Igreja Universal</span>
         </p>
+        <!--/ESTATICO:rodape-referencia-->
         <div class="rodape__redes">
           <p class="rodape__social">
-            <a id="rodape-whatsapp" href="#" target="_blank" rel="noopener">
+            <!--ESTATICO:rodape-whatsapp-->
+            <a id="rodape-whatsapp" href="https://wa.me/5584988067964?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Lavanderia%20Santo%20Ant%C3%B4nio.%20Gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener">
               <svg class="rodape__social-icone" aria-hidden="true" focusable="false">
                 <use href="#ico-whatsapp"></use>
               </svg>
               <span>Falar no WhatsApp</span>
             </a>
+            <!--/ESTATICO:rodape-whatsapp-->
           </p>
-          <p class="rodape__social" id="rodape-bloco-instagram" hidden>
+          <!--ESTATICO:rodape-instagram-->
+          <p class="rodape__social" id="rodape-bloco-instagram">
             <a
-              id="rodape-instagram"
-              href="#"
+              id="rodape-instagram" href="https://www.instagram.com/lavanderia_santoantonio/"
               target="_blank"
               rel="noopener"
               aria-label="Instagram da Lavanderia Santo Antônio"
@@ -407,32 +712,38 @@
               <span>Siga no Instagram</span>
             </a>
           </p>
+          <!--/ESTATICO:rodape-instagram-->
         </div>
+        <!--ESTATICO:direitos-->
         <p class="rodape__direitos">
           &copy; <span id="ano-atual">2026</span>
           <span data-campo="nome">Lavanderia Santo Antônio</span>. Todos os direitos
           reservados.
         </p>
-        <!-- Crédito do desenvolvedor: preenchido por js/app.js a partir de
-             CONFIG.desenvolvedor. Fica oculto quando o nome está vazio. -->
-        <p class="rodape__credito" id="rodape-credito" hidden></p>
+        <!--/ESTATICO:direitos-->
+        <!--ESTATICO:credito-->
+        <p class="rodape__credito" id="rodape-credito">Desenvolvido por Cristiano Santos</p>
+        <!--/ESTATICO:credito-->
       </div>
     </footer>
 
     <!-- =============== 9. BOTÃO FLUTUANTE DO WHATSAPP =============== -->
+    <!--ESTATICO:whatsapp-flutuante-->
     <a
       class="whatsapp-flutuante"
       id="whatsapp-flutuante"
-      href="#"
+      href="https://wa.me/5584988067964?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Lavanderia%20Santo%20Ant%C3%B4nio.%20Gostaria%20de%20mais%20informa%C3%A7%C3%B5es."
       target="_blank"
       rel="noopener"
       aria-label="Falar com a Lavanderia Santo Antônio no WhatsApp"
+      title="Chamar no WhatsApp"
     >
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <use href="#ico-whatsapp"></use>
       </svg>
       <span class="whatsapp-flutuante__texto">Chamar no WhatsApp</span>
     </a>
+    <!--/ESTATICO:whatsapp-flutuante-->
 
     <!-- Dados editáveis: carregue config.js ANTES de app.js -->
     <script src="js/config.js"></script>

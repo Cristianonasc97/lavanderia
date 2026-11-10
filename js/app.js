@@ -474,6 +474,20 @@
   }
 
   /**
+   * Os botões "Solicitar Orçamento" saem do gerador com o link do WhatsApp
+   * para funcionar sem JavaScript. Com JavaScript ligado, voltam a rolar
+   * até o simulador, exatamente como antes.
+   */
+  function restaurarBotoesSimulador() {
+    var botoes = document.querySelectorAll('[data-cta-simulador]');
+    for (var i = 0; i < botoes.length; i++) {
+      botoes[i].setAttribute('href', '#simulador');
+      botoes[i].removeAttribute('target');
+      botoes[i].removeAttribute('rel');
+    }
+  }
+
+  /**
    * Crédito do desenvolvedor no fim do rodapé.
    * Usa CONFIG.desenvolvedor.nome e CONFIG.desenvolvedor.link.
    * Nome vazio = o bloco inteiro fica oculto. Link vazio = texto simples.
@@ -737,7 +751,7 @@
   }
 
   /* ------------------------------------------------------------------ *
-   * 8. SIMULADOR DE SERVIÇO
+   * 8. SIMULADOR DE ORÇAMENTO
    * ------------------------------------------------------------------ */
   function quantidadeDe(id) {
     var q = quantidades[id];
@@ -1444,10 +1458,16 @@
       }
     });
 
-    var script = document.createElement('script');
-    script.type = 'application/ld+json';
+    // Atualiza o JSON-LD estático (gerado por scripts/gerar-estatico.js)
+    // em vez de criar um segundo bloco no <head>.
+    var script = document.getElementById('dados-estruturados');
+    if (!script) {
+      script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.id = 'dados-estruturados';
+      document.head.appendChild(script);
+    }
     script.textContent = JSON.stringify(dados, null, 2);
-    document.head.appendChild(script);
   }
 
   /* ------------------------------------------------------------------ *
@@ -1456,6 +1476,7 @@
   function iniciar() {
     aplicarIdentidade();
     aplicarContato();
+    restaurarBotoesSimulador();
     aplicarCreditoDesenvolvedor();
     aplicarAvisosAtendimento();
     montarSobre();
